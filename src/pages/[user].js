@@ -67,7 +67,7 @@ function user(props) {
     }
 
   return (
-    <div className='vh-100 bg-dark text-white d-flex justify-content-center containter p-5'>
+    <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter p-5'>
         <div className='container-fluid'>
             <div>
                 <h1 className='text-uppercase'>{props.user}</h1>
