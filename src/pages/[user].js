@@ -51,7 +51,7 @@ function user(props) {
         setMatches(matchesCopia)
     }
     const setMatchFB = async () =>{
-        form.date_time = new Date().toString()
+        form.date_time = new Date()
         if (matches[0]) { //si exite la partida anterior hacemos la resta para saber cuantos puntos a ganado o perdido
             form.sr = form.srTotal - matches[0].srTotal
             if(form.sr > 0){
