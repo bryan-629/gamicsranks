@@ -22,7 +22,6 @@ function Table({matches,handleClickDelete}) {
         <tbody>
             {matches.map((match)=>{
                 const fecha = new Date(match.date_time.seconds * 1000)
-                console.log(match.date_time.seconds)
                 return(
                     <tr className='' id={match.id}>
                         <th scope="row">{match.result}</th>

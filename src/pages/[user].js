@@ -41,7 +41,6 @@ function user(props) {
         const matchesRef = collection(db,'matches')
         const matchesQuery = query(matchesRef, orderBy("date_time","desc"));
         const querySnapshot = await getDocs(matchesQuery);
-        console.log(querySnapshot)
         let matchesCopia = []
         querySnapshot.docs.forEach((doc) => { //los tados y el id de la partida vienen por separado, entonces se lo añadimos manualmente
             let resultado = doc.data();
