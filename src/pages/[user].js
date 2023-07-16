@@ -4,7 +4,6 @@ import { Modal,Button, Form } from 'react-bootstrap'
 import '../firebase'
 import { collection, addDoc, getDocs, deleteDoc,doc, query, orderBy } from "firebase/firestore";
 import { db } from '../firebase';
-import firebaseui from 'firebaseui';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 function user(props) {
@@ -162,20 +161,9 @@ export default user
 
 
 export async function getServerSideProps({query}) {
-    
-   const data = await fetch("http://localhost:3000/api/hello").then((res)=>{
-    if (!res.ok) {
-        throw new Error("Response is NOT ok");
-    } else {
-        return res.json();
-    }
-   }).catch((error) =>{
-    return error;
-   })
     return {
       props: {
         user:query.user,
-        data:data
     }
   }
 }
