@@ -4,8 +4,16 @@ import { Modal,Button, Form } from 'react-bootstrap'
 import '../firebase'
 import { collection, addDoc, getDocs, deleteDoc,doc, query, orderBy } from "firebase/firestore";
 import { db } from '../firebase';
+import firebaseui from 'firebaseui';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 function user(props) {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    const singIn = async () => {
+        const result = await signInWithPopup(auth,provider)
+        console.log(result.user)
+    }
     const initialForm = {
         username:props.user.toUpperCase(),
         date_time: '',
