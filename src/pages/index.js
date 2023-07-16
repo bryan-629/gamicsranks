@@ -43,7 +43,7 @@ export default function Home() {
               
           </div>
           <div className='col-4'>
-            <Image src={price} objectFit='cover'></Image>
+            <Image src={price} objectFit='cover' alt={"price"}></Image>
           </div>
       </div>
     </div>
