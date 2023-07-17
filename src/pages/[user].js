@@ -5,14 +5,9 @@ import '../firebase'
 import { collection, addDoc, getDocs, deleteDoc,doc, query, orderBy } from "firebase/firestore";
 import { db } from '../firebase';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import Navbar from '@/components/Navbar';
 
 function user(props) {
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth();
-    const singIn = async () => {
-        const result = await signInWithPopup(auth,provider)
-        console.log(result.user)
-    }
     const initialForm = {
         username:props.user.toUpperCase(),
         date_time: '',
@@ -73,7 +68,10 @@ function user(props) {
     }
 
   return (
+    <>
+    <Navbar></Navbar>
     <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter p-5'>
+        
         <div className='container-fluid'>
             <div>
                 <h1 className='text-uppercase'>{props.user}</h1>
@@ -154,6 +152,8 @@ function user(props) {
       </Modal>
     </div>
 
+    </>
+    
   )
 }
 

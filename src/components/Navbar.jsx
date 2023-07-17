@@ -2,16 +2,16 @@ import React from 'react'
 import Image from 'next/image'
 import logo from '../../public/logo.svg'
 import Link from 'next/link'
-import { getAuth, signInWithPopup, GoogleAuthProvider} from "firebase/auth";
+import LoginButton from './LoginButton'
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import {useAuthState} from "react-firebase-hooks/auth"
+import LogOut from './LogOut'
 function Navbar() {
-  const provider = new GoogleAuthProvider();
+  const provider = new GoogleAuthProvider()
   const auth = getAuth();
-  const singIn = async () => {
-      const result = await signInWithPopup(auth,provider)
-      console.log(result.user)
-      //<button classNameName='btn btn-primary' onClick={singIn}>Sign In With Gmail</button>
-  }
-  return (
+  const [user, loading]= useAuthState(auth)
+
+  return(
         <nav className="navbar navbar-expand-lg bg-dark shadow " data-bs-theme="dark">
           <div className="container-fluid d-flex justify-content-between">
             <div>
@@ -23,12 +23,12 @@ function Navbar() {
             <div className="collapse navbar-collapse d-flex justify-content-end" id="navbarColor01">
               <ul className="navbar-nav">
                 <li className="nav-item px-4">
-                  <a className="nav-link active" href="#">Home
-                    <span className="visually-hidden">(current)</span>
+                  <a className="nav-link active font-roboto" href="/">Home  
                   </a>
                 </li>
                 <li >
-                  <button className='btn btn-primary' onClick={singIn}>Sign In With Gmail</button>
+                  {user? (<LogOut clases={'btn text-white font-roboto'}>Sign out</LogOut>):(<LoginButton clases={'btn btn-primary font-roboto'}>Sign in</LoginButton>)}
+                  
                 </li>
               </ul>
             </div>
