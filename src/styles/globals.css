@@ -101,6 +101,7 @@
   background-image: url("../../public/Geometrias.png");
   background-repeat: no-repeat;
 }
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

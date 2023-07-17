@@ -10,9 +10,9 @@ export default function Home() {
   return (
     <div className='bg-dark vh-100'>
       <Navbar></Navbar>
-      <div className=" background-container bg-dark container-fluid d-flex justify-content-center align-items-center " style={{ position: "relative", width: "100%", height: "calc(100vh - 60px )" }}>
+      <div className=" background-container bg-dark container-fluid  " style={{ height: "calc(100vh - 60px )" }}>
         <div className='container d-flex justify-content-center align-items-center'>
-          <div className='col-md-6 col-sm-12'>
+          <div className='col-md-7 col-sm-12'>
               <div className=''>
                 <div>
                   <h1 className='text-white display-1 font-bebas'>¡DOMINA EL JUEGO!</h1>
@@ -36,10 +36,8 @@ export default function Home() {
 
 
             </div>
-            <div className='col-md-6 h-100'>
-              <div>
-                <Image src={price} layout='responsive'  objectFit="cover" sizes='100vh' className=' p-5'  alt={"price"}></Image>
-              </div>
+            <div className='col-md-6 '>
+                <Image src={price} layout='responsive' objectFit="fill" className=' p-5'  alt={"price"}></Image>
             </div>
         </div>
       </div>
