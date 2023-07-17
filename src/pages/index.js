@@ -11,7 +11,7 @@ export default function Home() {
     <div className='bg-dark vh-100'>
       <Navbar></Navbar>
       <div className=" background-container bg-dark container-fluid  " style={{ height: "calc(100vh - 60px )" }}>
-        <div className='container d-flex justify-content-center align-items-center'>
+        <div className='container d-flex justify-content-center align-items-center h-100'>
           <div className='col-md-7 col-sm-12'>
               <div className=''>
                 <div>
