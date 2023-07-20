@@ -1,70 +1,65 @@
-import { useState,useEffect } from 'react'
+import { useState,useEffect,useContext } from 'react'
 import Table from '@/components/Table'
 import { Modal,Button, Form } from 'react-bootstrap'
 import '../firebase'
 import { collection, addDoc, getDocs, deleteDoc,doc, query, orderBy } from "firebase/firestore";
 import { db } from '../firebase';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Navbar from '@/components/Navbar';
+import useApi from '@/hooks/useApi';
+import { getAuth } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 function user(props) {
+    const auth = getAuth();
+    const [user, isLoadingLoginUser]= useAuthState(auth)
+    
     const initialForm = {
         username:props.user.toUpperCase(),
-        date_time: '',
         result:'Win',
         mode:'Hard point',
         map:'Al Bagra Fortress',
         points:'',
         kills:'',
         deaths:'',
-        sr:'',
-        srTotal:''
+        srTotal:'',
+        userID:''
     }
+    const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
+    const { data: userData, isLoading: isLoadingUserData, error: userDataError, fetchData: getUserData } = useApi();
+    const { data: deleteMatchInfo, isLoading: isLoadingDeleteMatch, error: deleteMatchError, fetchData: deleteMatch } = useApi();
     const [matches,setMatches] = useState([])
     const [form, setForm] = useState(initialForm)
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(false);// ESTADO DE LA MODAL
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {// CERRAR MODAL 
+    setForm({ ...form, userID: '' });// si cierra el formulario, reseateamos el valor a por defecto, por si luego hay cambios de usuario.
+    setShow(false);
+  }
+
+  const handleShow = () => { //ABRIR MODAL
+    setForm({ ...form, userID: user.uid }); //Si abre el formulario, preparamos ya el usuario que lo esta abriendo.
+    setShow(true);
+  }
 
     useEffect(()=>{
-        getData()
-    },[])
+        if (!isLoadingLoginUser) {
+            getData();
+        }
+    },[isLoadingLoginUser])
 
     const handleClickDelete = async (e) =>{
         e.preventDefault;
-        const idClicked = e.target.parentElement.parentElement.id;
-        await deleteDoc(doc(db, "matches", idClicked));
-        const resultado = matches.filter(match => match.id != idClicked)
-        setMatches(resultado);
+        await deleteMatch(process.env.NEXT_PUBLIC_API_URL + "deleteMatch.php", "POST", {"matchID" : e.target.parentElement.parentElement.id});
         getData()
     }
+
     const getData = async () => {
-        const matchesRef = collection(db,'matches')
-        const matchesQuery = query(matchesRef, orderBy("date_time","desc"));
-        const querySnapshot = await getDocs(matchesQuery);
-        let matchesCopia = []
-        querySnapshot.docs.forEach((doc) => { //los tados y el id de la partida vienen por separado, entonces se lo añadimos manualmente
-            let resultado = doc.data();
-            resultado.id = doc.id
-            matchesCopia.push(resultado)
-        });
-        setMatches(matchesCopia)
+        console.log(user)
+        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : user.uid});
     }
-    const setMatchFB = async () =>{
-        form.date_time = new Date()
-        if (matches[0]) { //si exite la partida anterior hacemos la resta para saber cuantos puntos a ganado o perdido
-            form.sr = form.srTotal - matches[0].srTotal
-            if(form.sr > 0){
-                form.sr = '+' + form.sr // añadimos el signo positivo
-            }
-        }else{
-            form.sr = form.srTotal
-        }
-       await addDoc(collection(db,"matches"),form)
-       getData()
-       setForm(initialForm);
-       console.log('nueva partida guardada');
+    
+    const storeGameInDatabase = async (e) =>{
+        await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"insertMatch.php", "POST", form);
     }
 
   return (
@@ -84,7 +79,16 @@ function user(props) {
             </div>
             <div className='d-flex justify-content-center container-fluid px-5'>
                 <div className='container-fluid px-5'>
-                    {matches[0]?(<Table matches={matches} handleClickDelete={handleClickDelete}></Table>):("vacio")}
+                    {isLoadingUserData?
+                    (
+                    <h1>Loading...</h1>
+                    ):(
+                        userData?(
+                            <Table matches={userData} handleClickDelete={handleClickDelete}></Table>
+                            ):(
+                                <h1>Vacio...</h1>
+                            )
+                        )}
                 </div>
             </div>
         </div>
@@ -144,7 +148,7 @@ function user(props) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => {setMatchFB() 
+          <Button variant="primary" onClick={() => {storeGameInDatabase() 
             handleClose()}}>
             Save Changes
           </Button>
@@ -161,6 +165,7 @@ export default user
 
 
 export async function getServerSideProps({query}) {
+    
     return {
       props: {
         user:query.user,

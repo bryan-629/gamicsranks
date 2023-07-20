@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function Table({matches,handleClickDelete}) {
-    console.log(matches)
+
+  const calculatePreviousPointDifferences = (match, index) => {
+    if (index == matches.length -1) {
+            return match.sr = match.srTotal
+        }
+    return (match.srTotal - matches[index +1].srTotal )
+  };
+
+
 
   return (
-    <table class="table table-dark table-striped">
+    <table className="table table-dark table-striped">
         <thead>
             <tr>
                 <th scope="col">Resultado</th>
@@ -20,10 +28,12 @@ function Table({matches,handleClickDelete}) {
             </tr>
         </thead>
         <tbody>
-            {matches.map((match)=>{
-                const fecha = new Date(match.date_time.seconds * 1000)
+            {matches.map((match,index)=>{
+                const fecha = new Date(match.date_time)
+                match.sr = calculatePreviousPointDifferences(match, index)
+               
                 return(
-                    <tr className='' id={match.id}>
+                    <tr className='' key={match.id} id={match.id}>
                         <th scope="row">{match.result}</th>
                         <td>{fecha.toLocaleDateString()}</td>
                         <td>{match.mode}</td>
@@ -32,7 +42,7 @@ function Table({matches,handleClickDelete}) {
                         <td>{match.kills}</td>
                         <td>{match.deaths}</td>
                         {match.sr > 0? (
-                            <td className='text-success'>{match.sr}</td>
+                            <td className='text-success'>{"+" + match.sr}</td>
                         ):(<td className='text-danger'>{match.sr}</td>)}
                         
                         <td>{match.srTotal}</td>
