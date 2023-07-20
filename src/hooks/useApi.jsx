@@ -11,6 +11,7 @@ const useApi = () => {
     try {
       const options = {
         method: method,
+        mode:"cors",
         body: body ? JSON.stringify(body) : null
       };
       const response = await fetch(url, options);
