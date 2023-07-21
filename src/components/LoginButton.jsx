@@ -1,12 +1,22 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { useRouter } from 'next/router';
-import { useAuthentication } from '../../Context/AuthProvider';
-
 function LoginButton({children, clases}) {
-    
-    const { user, loading, signInWithGoogle, signOutUser,getUser } = useAuthentication();
+    const router = useRouter()
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
     const singIn = async () => {
-        await signInWithGoogle();
+        await signInWithPopup(auth,provider).then((result)=>{
+         router.push(`/${result.user.displayName}`)
+        }).catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+        });
     }
   return (
     <button className={`${clases}`} onClick={singIn}>{children}</button>

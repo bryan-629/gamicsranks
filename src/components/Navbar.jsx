@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import Image from 'next/image'
 import logo from '../../public/logo.svg'
+import Link from 'next/link'
 import LoginButton from './LoginButton'
+import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import {useAuthState} from "react-firebase-hooks/auth"
 import LogOut from './LogOut'
-import { useAuthentication } from '../../Context/AuthProvider'
 function Navbar() {
-  const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal} = useAuthentication();
- 
-  
+  const auth = getAuth();
+  const [user, loading]= useAuthState(auth)
+
   return(
         <nav className="navbar navbar-expand-lg bg-dark shadow " data-bs-theme="dark">
           <div className="container-fluid d-flex justify-content-between">

@@ -1,11 +1,20 @@
 import React from 'react'
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from 'next/router';
-import { useAuthentication } from '../../Context/AuthProvider';
 function LogOut({children,clases}) {
-    const { user, isLoadingLoginUser, signInWithGoogle, signOutUser,getUser } = useAuthentication();
+    const auth = getAuth();
+    const router = useRouter()
+    const handleSignOut = () =>{
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            router.push("/")
+          }).catch((error) => {
+            // An error happened.
+          });
+    }
+
   return (
-    <button className={`${clases}`} onClick={signOutUser}>{children}</button>
+    <button className={`${clases}`} onClick={handleSignOut}>{children}</button>
   )
 }
 
