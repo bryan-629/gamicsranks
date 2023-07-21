@@ -4,6 +4,7 @@ import logo from '../../public/logo.svg'
 import LoginButton from './LoginButton'
 import LogOut from './LogOut'
 import { useAuthentication } from '../../Context/AuthProvider'
+import Link from 'next/link'
 function Navbar() {
   const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal} = useAuthentication();
  
@@ -20,8 +21,8 @@ function Navbar() {
             <div className="collapse navbar-collapse d-flex justify-content-end" id="navbarColor01">
               <ul className="navbar-nav">
                 <li className="nav-item px-4">
-                  <a className="nav-link active font-roboto" href="/">Home  
-                  </a>
+                  <Link className="nav-link active font-roboto" href="/">Home  
+                  </Link>
                 </li>
                 <li >
                   {user && user != null?(<LogOut clases={'btn text-white font-roboto'}>Sign out</LogOut>):(<LoginButton clases={'btn btn-primary font-roboto'}>Sign in</LoginButton>)}
