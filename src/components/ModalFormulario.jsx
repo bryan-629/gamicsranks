@@ -57,7 +57,6 @@ const handleSubmit = async () =>{
         "uid":user.uid
     }
     await saveNewID(process.env.NEXT_PUBLIC_API_URL +"saveNewId.php", "POST", sendData).then((response)=>{
-        console.log(response)
         route.push("/"+userIdForm.toUpperCase())
         setShowIdModal(false)
         
