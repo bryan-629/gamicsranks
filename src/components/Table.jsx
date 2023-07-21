@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useAuthentication } from '../../Context/AuthProvider';
 function Table({matches,handleClickDelete}) {
   const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
-    console.log(matches[0].userID)
   const calculatePreviousPointDifferences = (match, index) => {
     if (index == matches.length -1) {
             return match.sr = match.srTotal
@@ -10,7 +9,7 @@ function Table({matches,handleClickDelete}) {
     return (match.srTotal - matches[index +1].srTotal )
   };
 
-  if (user) {
+  if (user && matches[0]) {
     if (user.id == matches[0].userID) {
         return (
             <table className="table table-dark table-striped">

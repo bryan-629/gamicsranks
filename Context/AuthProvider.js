@@ -32,11 +32,12 @@ const useAuthenticationHook = () => {
         "uid" : user.uid
       }
       await fetchData(process.env.NEXT_PUBLIC_API_URL +"login.php", "POST", form).then((response)=>{
-         setUser(response[0])
+        
         if (response[0].id == "") {
           setShowIdModal(true)
           return
         }
+        setUser(response[0])
         router.push("/" + response[0].id)
 
       });
