@@ -25,14 +25,12 @@ function user(props) {
         userID:''
     }
     const auth = getAuth();
-    const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
+    const { user ,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
     const { cookies, setCookie, getCookie, deleteCookie } = useCookie();
     const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
     const { data: userData, isLoading: isLoadingUserData, error: userDataError, fetchData: getUserData } = useApi();
     const { data: deleteMatchInfo, isLoading: isLoadingDeleteMatch, error: deleteMatchError, fetchData: deleteMatch } = useApi();
-
-    
-    const [matches,setMatches] = useState([])
+    const [showAddButton, setShowAddButton] = new useState(false)
     const [form, setForm] = useState(initialForm)
     const [show, setShow] = useState(false);// ESTADO DE LA MODAL
 
@@ -41,18 +39,20 @@ function user(props) {
     setShow(false);
   }
 
+
+
   const handleShow = () => { //ABRIR MODAL
     setForm({ ...form, userID: user.uid }); //Si abre el formulario, preparamos ya el usuario que lo esta abriendo.
     setShow(true);
   }
 
     useEffect(()=>{
-        if (!isLoadingLoginUser) {
+        if (!isLoadingLoginUser && user) {
             getData();
-            
             //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
         };
-    },[isLoadingLoginUser])
+
+    },[isLoadingLoginUser,user])
 
     const handleClickDelete = async (e) =>{
         e.preventDefault;
@@ -60,8 +60,29 @@ function user(props) {
         getData()
     }
 
+
     const getData = async () => {
-        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : props.user.toUpperCase()});
+        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : props.user.toUpperCase()}).then((response)=>{
+            if (response[0]) {
+                if (user.id == props.user.toUpperCase()) {
+                    setShowAddButton(true)
+                }else{
+                    setShowAddButton(false)
+                }
+               }
+            })
+    }
+
+    const showButtonNewMatch = () =>{ //control para mostrar el boton de añadir nueva partida
+        if (!isLoadingUserData && !isLoadingLoginUser) {
+            if (userData && user) {
+                if (user.id == props.user.toUpperCase()) {
+                    return true
+                }else{
+                    return false
+                }
+               }
+        }
     }
     
     const storeGameInDatabase = async (e) =>{
@@ -83,8 +104,7 @@ function user(props) {
             </div>
             
             <div className='d-flex justify-content-center py-3'>
-                {user?(<Button variant="primary" onClick={handleShow}>ADD NEW MATCH</Button>):(null)}
-                
+            {showButtonNewMatch() ? (<Button variant="primary" onClick={handleShow}>ADD NEW MATCH</Button>):(null)}
             </div>
             <div className='d-flex justify-content-center container-fluid px-5'>
                 <div className='container-fluid px-5'>
