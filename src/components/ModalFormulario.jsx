@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Modal,Button, Form } from 'react-bootstrap'
 import { useAuthentication } from '../../Context/AuthProvider'
+import { useRouter } from 'next/router';
 import useApi from '@/hooks/useApi';
 function ModalFormulario() {
 const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
-
+const route = useRouter()
 const { data, isLoading, error, fetchData } = useApi();
 const { data: dataSaveNewID, isLoading: isLoadingSaveNewID, error:  saveNewIDError, fetchData:saveNewID } = useApi();
 const [userIdForm,setUserIdForm] = useState("");
@@ -30,7 +31,7 @@ const handleComprobe = async () => {
             setComprobeLoading(true)
             await fetchData(process.env.NEXT_PUBLIC_API_URL +"comprobeUser.php?id=" + userIdForm.toUpperCase(), "GET").then((response)=>{
                 setComprobeLoading(false)
-                console.log(response.id == userIdForm.toUpperCase())
+
                 if (response.id == userIdForm.toUpperCase()) { // es igual la respuesta a lo que el a escrito?
                     setIsOkIdClass('is-valid') //es igual, asi que ponemos el input en valido y le permitimos enviarlo 
                     setDisableSendButton(false)
@@ -47,6 +48,7 @@ const handleComprobe = async () => {
         setIsOkIdClass('is-invalid')
         setDisableSendButton(true)
     }
+    
 }
  
 const handleSubmit = async () =>{
@@ -54,7 +56,12 @@ const handleSubmit = async () =>{
         "id":encodeURI(userIdForm.toUpperCase()),
         "uid":user.uid
     }
-    await saveNewID(process.env.NEXT_PUBLIC_API_URL +"saveNewId.php", "POST", sendData)
+    await saveNewID(process.env.NEXT_PUBLIC_API_URL +"saveNewId.php", "POST", sendData).then((response)=>{
+        console.log(response)
+        route.push("/"+userIdForm.toUpperCase())
+        setShowIdModal(false)
+        
+    })
     
 }
 
@@ -84,8 +91,7 @@ const handleSubmit = async () =>{
           <Button variant="secondary" disabled={comprobeLoading} onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" disabled={disableSendButton} onClick={() => {handleSubmit() 
-            handleClose()}}>
+          <Button variant="primary" disabled={disableSendButton} onClick={() => {handleSubmit()}}>
             Save Changes
           </Button>
         </Modal.Footer>
