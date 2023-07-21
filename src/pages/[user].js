@@ -7,7 +7,7 @@ import { db } from '../firebase';
 import Navbar from '@/components/Navbar';
 import useApi from '@/hooks/useApi';
 import { getAuth } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthentication } from '../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
 
 function user(props) {
@@ -25,13 +25,13 @@ function user(props) {
         userID:''
     }
     const auth = getAuth();
-    const [user, isLoadingLoginUser]= useAuthState(auth)
+    const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
     const { cookies, setCookie, getCookie, deleteCookie } = useCookie();
     const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
     const { data: userData, isLoading: isLoadingUserData, error: userDataError, fetchData: getUserData } = useApi();
     const { data: deleteMatchInfo, isLoading: isLoadingDeleteMatch, error: deleteMatchError, fetchData: deleteMatch } = useApi();
 
-
+    
     const [matches,setMatches] = useState([])
     const [form, setForm] = useState(initialForm)
     const [show, setShow] = useState(false);// ESTADO DE LA MODAL
@@ -49,7 +49,7 @@ function user(props) {
     useEffect(()=>{
         if (!isLoadingLoginUser) {
             getData();
-            console.log(user)
+            
             //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
         };
     },[isLoadingLoginUser])
@@ -81,12 +81,14 @@ function user(props) {
             <div className='d-flex justify-content-center '>
                 <h1 className='text-uppercase'>historial</h1>
             </div>
+            
             <div className='d-flex justify-content-center py-3'>
-                <Button variant="primary" onClick={handleShow}>ADD NEW MATCH</Button>
+                {user?(<Button variant="primary" onClick={handleShow}>ADD NEW MATCH</Button>):(null)}
+                
             </div>
             <div className='d-flex justify-content-center container-fluid px-5'>
                 <div className='container-fluid px-5'>
-                    {isLoadingUserData?
+                    {isLoadingUserData || isLoadingLoginUser?
                     (
                     <h1>Loading...</h1>
                     ):(
