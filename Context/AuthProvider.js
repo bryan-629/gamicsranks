@@ -27,25 +27,24 @@ const useAuthenticationHook = () => {
       const form ={
         "displayname" : user.displayName,
         "email": user.email,
-        "token": user.getIdToken(),
+        "token": user.stsTokenManager.accessToken,
+        "photo_url": user.photoURL,
         "emailVerified": user.emailVerified,
         "uid" : user.uid
       }
       await fetchData(process.env.NEXT_PUBLIC_API_URL +"login.php", "POST", form).then((response)=>{
-        
+        setUser(response[0])
         if (response[0].id == "") {
           setShowIdModal(true)
-          return
+          router.push("/" + response[0].id )
         }
-        setUser(response[0])
-        router.push("/" + response[0].id)
-
       });
       
     } catch (error) {
       console.error('Error al iniciar sesión con Google:', error.message);
     }
     setIsLoadingLoginUser(false)
+   
   };
 
   const getUser = () =>{
@@ -62,26 +61,28 @@ const useAuthenticationHook = () => {
     }
   };
 
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged( async (user) => {
-      if (user) {
+    const unsubscribe = auth.onAuthStateChanged( async (userChanged) => {
+      if (userChanged ) {
+        
         const form ={
-          "displayname" : user.displayName,
-          "email": user.email,
-          "token": user.getIdToken(),
-          "emailVerified": user.emailVerified,
-          "uid" : user.uid
+          "displayname" : userChanged.displayName,
+          "email": userChanged.email,
+          "token": userChanged.stsTokenManager.accessToken,
+          "photo_url":userChanged.photoURL,
+          "emailVerified": userChanged.emailVerified,
+          "uid" : userChanged.uid
         }
         await fetchData(process.env.NEXT_PUBLIC_API_URL +"login.php", "POST", form).then((response)=>{
           setUser(response[0])
+
          if (response[0].id == "") {
            setShowIdModal(true)
-           return
          }
+         router.push("/" + response[0].id )
        });
       }
-     
-      
       setIsLoadingLoginUser(false);
     });
     return () => unsubscribe();
