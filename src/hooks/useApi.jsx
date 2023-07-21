@@ -22,6 +22,7 @@ const useApi = () => {
         throw new Error('Error al realizar la solicitud');
       }
 
+      
       setData(jsonData);
       setIsLoading(false);
       return jsonData
