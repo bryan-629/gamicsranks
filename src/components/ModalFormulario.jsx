@@ -4,7 +4,7 @@ import { useAuthentication } from '../../Context/AuthProvider'
 import { useRouter } from 'next/router';
 import useApi from '@/hooks/useApi';
 function ModalFormulario() {
-const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
+const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal,changeId } = useAuthentication();
 const route = useRouter()
 const { data, isLoading, error, fetchData } = useApi();
 const { data: dataSaveNewID, isLoading: isLoadingSaveNewID, error:  saveNewIDError, fetchData:saveNewID } = useApi();
@@ -57,9 +57,10 @@ const handleSubmit = async () =>{
         "uid":user.uid
     }
     await saveNewID(process.env.NEXT_PUBLIC_API_URL +"saveNewId.php", "POST", sendData).then((response)=>{
+        console.log(user)
+        changeId(userIdForm)
         route.push("/"+userIdForm.toUpperCase())
         setShowIdModal(false)
-        
     })
     
 }

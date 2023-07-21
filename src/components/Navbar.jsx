@@ -7,8 +7,7 @@ import { useAuthentication } from '../../Context/AuthProvider'
 import Link from 'next/link'
 function Navbar() {
   const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal} = useAuthentication();
- 
-  
+
   return(
         <nav className="navbar navbar-expand-lg bg-dark shadow " data-bs-theme="dark">
           <div className="container-fluid d-flex justify-content-between">
