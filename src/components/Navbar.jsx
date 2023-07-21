@@ -24,10 +24,19 @@ function Navbar() {
                   <Link className="nav-link active font-roboto" href="/">Home  
                   </Link>
                 </li>
-                <li >
-                  {user && user != null?(<LogOut clases={'btn text-white font-roboto'}>Sign out</LogOut>):(<LoginButton clases={'btn btn-primary font-roboto'}>Sign in</LoginButton>)}
+                
+                  {user && user != null?(
+                    <>
+                      <li className="nav-item px-4">
+                      <Link className="nav-link active font-roboto" href={`/${user.id}`}>My profile</Link>
+                    </li>
+                    <li >
+                      <LogOut clases={'btn text-white font-roboto'}>Sign out</LogOut>
+                    </li>
+                  </>
+                  ):(
+                  <LoginButton clases={'btn btn-primary font-roboto'}>Sign in</LoginButton>)}
                   
-                </li>
               </ul>
             </div>
           </div>
