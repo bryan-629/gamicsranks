@@ -80,7 +80,7 @@ const useAuthenticationHook = () => {
          if (response[0].id == "") {
            setShowIdModal(true)
          }
-         router.push("/" + response[0].id )
+        
        });
       }
       setIsLoadingLoginUser(false);
