@@ -4,9 +4,16 @@ import Navbar from '@/components/Navbar';
 import { Button } from 'react-bootstrap';
 import Image from 'next/image';
 import price from "../../public/price.png"
+import { useAuthentication } from '../../Context/AuthProvider';
+import ModalFormulario from '@/components/ModalFormulario';
+import { useEffect } from 'react';
 
 
 export default function Home() {
+  const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
+  useEffect(()=>{
+    console.log(showIdModal)
+  },[showIdModal])
   return (
     <div className='bg-dark vh-100'>
       <Navbar></Navbar>
@@ -89,6 +96,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <ModalFormulario></ModalFormulario>
         <footer>
 
         </footer>

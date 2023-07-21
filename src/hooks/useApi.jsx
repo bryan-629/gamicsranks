@@ -23,11 +23,14 @@ const useApi = () => {
       }
 
       setData(jsonData);
+      setIsLoading(false);
+      return jsonData
     } catch (error) {
       setError(error.message);
     }
 
-    setIsLoading(false);
+    
+    
   };
 
   return { data, isLoading, error, fetchData };
