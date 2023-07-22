@@ -47,12 +47,6 @@ function user(props) {
     setShow(true);
   }
 
-  useEffect(()=>{
-    if (!user) {
-        route.push("/")
-    };
-
-},[user])
 
     useEffect(()=>{
         if (!isLoadingAuth && user) {

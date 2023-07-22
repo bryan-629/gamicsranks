@@ -19,7 +19,7 @@ const useAuthenticationHook = () => {
   const { data, isLoading, error, fetchData } = useApi();
   const [showNewIdModal, setShowNewIdModal] = useState(false);
   const [isLoadingLoginUser, setIsLoadingLoginUser] = useState(true);
-  const router = useRouter();
+
 
   useEffect(() => {
     if (user != null && isLoadingAuth) {
