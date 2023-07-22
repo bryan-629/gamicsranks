@@ -1,4 +1,5 @@
 // useAuthentication.js
+import { db,app } from '@/firebase';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getAuth, signInWithRedirect, signOut, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import useApi from '@/hooks/useApi';
@@ -11,7 +12,7 @@ export const useAuthentication = () => {
 };
 
 const useAuthenticationHook = () => {
-  const auth = getAuth();
+  const auth = getAuth(app);
   const [user, setUser] = useState(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState();
   const googleProvider = new GoogleAuthProvider();
