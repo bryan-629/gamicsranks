@@ -9,10 +9,11 @@ import useApi from '@/hooks/useApi';
 import { getAuth } from 'firebase/auth';
 import { useAuthentication } from '../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
+import { useRouter } from 'next/router';
 
 function user(props) {
     
-    
+    const route = useRouter()
     const initialForm = {
         username:props.user.toUpperCase(),
         result:'Win',
@@ -46,6 +47,13 @@ function user(props) {
     setShow(true);
   }
 
+  useEffect(()=>{
+    if (!user) {
+        route.push("/")
+    };
+
+},[user])
+
     useEffect(()=>{
         if (!isLoadingAuth && user) {
             getData();
@@ -62,15 +70,7 @@ function user(props) {
 
 
     const getData = async () => {
-        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : props.user.toUpperCase()}).then((response)=>{
-            if (response[0]) {
-                if (user.id == props.user.toUpperCase()) {
-                    setShowAddButton(true)
-                }else{
-                    setShowAddButton(false)
-                }
-               }
-            })
+        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : props.user.toUpperCase()})
     }
 
     const showButtonNewMatch = () =>{ //control para mostrar el boton de añadir nueva partida
