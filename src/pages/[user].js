@@ -48,13 +48,10 @@ function user(props) {
   }
 
 
-    useEffect(()=>{
-        if (!isLoadingAuth && user) {
+    useEffect(()=>{ //segun arranca la pagina consultamos datos del usuario que esta buscando
             getData();
             //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
-        };
-
-    },[isLoadingAuth,user])
+    },[])
 
     const handleClickDelete = async (e) =>{
         e.preventDefault;

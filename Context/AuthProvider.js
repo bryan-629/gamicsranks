@@ -12,6 +12,7 @@ export const useAuthentication = () => {
 };
 
 const useAuthenticationHook = () => {
+  const route = useRouter()
   const auth = getAuth(app);
   const [user, setUser] = useState(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState();
@@ -42,6 +43,7 @@ const useAuthenticationHook = () => {
   const signOutUser = async () => {
     try {
       await signOut(auth);
+      route.push("/")
       setUser(null);
     } catch (error) {
       console.error('Error al cerrar sesión:', error.message);
