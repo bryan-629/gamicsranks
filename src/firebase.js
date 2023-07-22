@@ -9,7 +9,7 @@ import { getFirestore } from "firebase/firestore";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyD1KCXuuM-ODcwVaX3whSI9sHrMwC-1W7A",
-  authDomain: "gamics-rankeds.firebaseapp.com",
+  authDomain: "https://gamicsranks-git-feature-edit-profile-bryan-629.vercel.app/",
   projectId: "gamics-rankeds",
   storageBucket: "gamics-rankeds.appspot.com",
   messagingSenderId: "851319215071",
