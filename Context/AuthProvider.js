@@ -78,7 +78,7 @@ const useAuthenticationHook = () => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged( async (userChanged) => {
-        /*if (userChanged) {
+     
           const form ={
             "displayname" :userChanged.displayName,
             "email": userChanged.email,
@@ -93,8 +93,6 @@ const useAuthenticationHook = () => {
           if (response[0].id == "") {
             setShowIdModal(true)
           }       
-        }*/
-        setUser(userChanged)
       setIsLoadingLoginUser(false);
     });
     return () => unsubscribe();
