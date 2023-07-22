@@ -2,16 +2,13 @@ import { useState,useEffect,useContext } from 'react'
 import Table from '@/components/Table'
 import { Modal,Button, Form } from 'react-bootstrap'
 import '../firebase'
-import { collection, addDoc, getDocs, deleteDoc,doc, query, orderBy } from "firebase/firestore";
-import { db } from '../firebase';
 import Navbar from '@/components/Navbar';
 import useApi from '@/hooks/useApi';
-import { getAuth } from 'firebase/auth';
 import { useAuthentication } from '../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
 import { useRouter } from 'next/router';
 
-function user(props) {
+function user(props) { //Perfil del usuario donde se muestran  todas las estadisticas
     
     const route = useRouter()
     const initialForm = {
@@ -25,7 +22,6 @@ function user(props) {
         srTotal:'',
         userID:''
     }
-    const auth = getAuth();
     const {  user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId  } = useAuthentication();
     const { cookies, setCookie, getCookie, deleteCookie } = useCookie();
     const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
@@ -35,19 +31,14 @@ function user(props) {
     const [form, setForm] = useState(initialForm)
     const [show, setShow] = useState(false);// ESTADO DE LA MODAL
 
-  const handleClose = () => {// CERRAR MODAL 
+  const handleCloseModal = () => {// CERRAR MODAL 
     setForm({ ...form, userID: '' });// si cierra el formulario, reseateamos el valor a por defecto, por si luego hay cambios de usuario.
     setShow(false);
   }
-
-
-
-  const handleShow = () => { //ABRIR MODAL
-    setForm({ ...form, userID: user.uid }); //Si abre el formulario, preparamos ya el usuario que lo esta abriendo.
+  const handleOpenModal = () => { //ABRIR MODAL
+    setForm({ ...form, userID: user.id }); //Si abre el formulario, preparamos ya el usuario que lo esta abriendo.
     setShow(true);
   }
-
-
     useEffect(()=>{ //segun arranca la pagina consultamos datos del usuario que esta buscando
             getData();
             //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
@@ -95,7 +86,7 @@ function user(props) {
             </div>
             
             <div className='d-flex justify-content-center py-3'>
-            {showButtonNewMatch() ? (<Button variant="primary" onClick={handleShow}>ADD NEW MATCH</Button>):(null)}
+            {showButtonNewMatch() ? (<Button variant="primary" onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
             </div>
             <div className='d-flex justify-content-center container-fluid px-5'>
                 <div className='container-fluid px-5'>
@@ -112,7 +103,7 @@ function user(props) {
                 </div>
             </div>
         </div>
-        <Modal show={show}  onHide={handleClose}>
+        <Modal show={show}  onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>ADD NEW MATCH</Modal.Title>
         </Modal.Header>
@@ -165,11 +156,11 @@ function user(props) {
             </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleCloseModal}>
             Close
           </Button>
           <Button variant="primary" onClick={() => {storeGameInDatabase() 
-            handleClose()}}>
+            handleCloseModal()}}>
             Save Changes
           </Button>
         </Modal.Footer>

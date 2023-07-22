@@ -43,8 +43,8 @@ const useAuthenticationHook = () => {
   const signOutUser = async () => {
     try {
       await signOut(auth);
-      route.push("/")
       setUser(null);
+      route.push("/")
     } catch (error) {
       console.error('Error al cerrar sesión:', error.message);
     }
@@ -86,7 +86,7 @@ const useAuthenticationHook = () => {
     try {
       const response = await saveNewID(process.env.NEXT_PUBLIC_API_URL + "saveNewId.php", "POST", sendData);
       setUser({ ...user, "id": newId.toUpperCase() });
-      console.log(user);
+      setShowNewIdModal()
     } catch (error) {
       console.error('Error al cambiar el ID:', error.message);
     } finally {
