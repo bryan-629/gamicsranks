@@ -9,7 +9,7 @@ import { getFirestore } from "firebase/firestore";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyD1KCXuuM-ODcwVaX3whSI9sHrMwC-1W7A",
-  authDomain: "gamicsranks-git-feature-edit-profile-bryan-629.vercel.app",
+  authDomain: "gamics-rankeds.firebaseapp.com",
   projectId: "gamics-rankeds",
   storageBucket: "gamics-rankeds.appspot.com",
   messagingSenderId: "851319215071",
@@ -17,5 +17,5 @@ const firebaseConfig = {
   measurementId: "G-CBKVVK52G2"
 };
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
