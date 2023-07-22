@@ -52,16 +52,7 @@ const handleComprobe = async () => {
 }
  
 const handleSubmit = async () =>{
-    const sendData = {
-        "id":encodeURI(userIdForm.toUpperCase()),
-        "uid":user.uid
-    }
-    await saveNewID(process.env.NEXT_PUBLIC_API_URL +"saveNewId.php", "POST", sendData).then((response)=>{
-        console.log(user)
-        changeId(userIdForm)
-        route.push("/"+userIdForm.toUpperCase())
-        setShowNewIdModal(false)
-    })
+    changeId(userIdForm)
     
 }
 

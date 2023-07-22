@@ -43,7 +43,7 @@ function user(props) {
 
 
   const handleShow = () => { //ABRIR MODAL
-    setForm({ ...form, userID: user.uid }); //Si abre el formulario, preparamos ya el usuario que lo esta abriendo.
+    setForm({ ...form, userID: user.id }); //Si abre el formulario, preparamos ya el usuario que lo esta abriendo.
     setShow(true);
   }
 
