@@ -72,6 +72,7 @@ const useAuthenticationHook = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (userChanged) => {
+      console.log(userChanged)
       if (userChanged != null) {
         console.log(userChanged)
         callLoginphp(userChanged)
