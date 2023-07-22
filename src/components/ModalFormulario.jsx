@@ -4,7 +4,7 @@ import { useAuthentication } from '../../Context/AuthProvider'
 import { useRouter } from 'next/router';
 import useApi from '@/hooks/useApi';
 function ModalFormulario() {
-const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal,changeId } = useAuthentication();
+const {  user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId  } = useAuthentication();
 const route = useRouter()
 const { data, isLoading, error, fetchData } = useApi();
 const { data: dataSaveNewID, isLoading: isLoadingSaveNewID, error:  saveNewIDError, fetchData:saveNewID } = useApi();
@@ -16,7 +16,7 @@ const [disableSendButton, setDisableSendButton] = useState(true)
 
 const handleClose = async () => {// CERRAR MODAL 
     await signOutUser()
-    setShowIdModal(false);
+    setShowNewIdModal(false);
 }
 useEffect(()=>{
     setIsOkIdClass('')
@@ -60,14 +60,14 @@ const handleSubmit = async () =>{
         console.log(user)
         changeId(userIdForm)
         route.push("/"+userIdForm.toUpperCase())
-        setShowIdModal(false)
+        setShowNewIdModal(false)
     })
     
 }
 
 
   return (
-    <Modal show={showIdModal}  onHide={handleClose}>
+    <Modal show={showNewIdModal}  onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Bienvenido</Modal.Title>
         </Modal.Header>

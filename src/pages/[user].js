@@ -9,10 +9,11 @@ import useApi from '@/hooks/useApi';
 import { getAuth } from 'firebase/auth';
 import { useAuthentication } from '../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
+import { useRouter } from 'next/router';
 
 function user(props) {
     
-    
+    const route = useRouter()
     const initialForm = {
         username:props.user.toUpperCase(),
         result:'Win',
@@ -25,7 +26,7 @@ function user(props) {
         userID:''
     }
     const auth = getAuth();
-    const { user ,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
+    const {  user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId  } = useAuthentication();
     const { cookies, setCookie, getCookie, deleteCookie } = useCookie();
     const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
     const { data: userData, isLoading: isLoadingUserData, error: userDataError, fetchData: getUserData } = useApi();
@@ -46,13 +47,20 @@ function user(props) {
     setShow(true);
   }
 
+  useEffect(()=>{
+    if (!user) {
+        route.push("/")
+    };
+
+},[user])
+
     useEffect(()=>{
-        if (!isLoadingLoginUser && user) {
+        if (!isLoadingAuth && user) {
             getData();
             //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
         };
 
-    },[isLoadingLoginUser,user])
+    },[isLoadingAuth,user])
 
     const handleClickDelete = async (e) =>{
         e.preventDefault;
@@ -62,19 +70,11 @@ function user(props) {
 
 
     const getData = async () => {
-        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : props.user.toUpperCase()}).then((response)=>{
-            if (response[0]) {
-                if (user.id == props.user.toUpperCase()) {
-                    setShowAddButton(true)
-                }else{
-                    setShowAddButton(false)
-                }
-               }
-            })
+        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : props.user.toUpperCase()})
     }
 
     const showButtonNewMatch = () =>{ //control para mostrar el boton de añadir nueva partida
-        if (!isLoadingUserData && !isLoadingLoginUser) {
+        if (!isLoadingUserData && !isLoadingAuth) {
             if (userData && user) {
                 if (user.id == props.user.toUpperCase()) {
                     return true
@@ -108,7 +108,7 @@ function user(props) {
             </div>
             <div className='d-flex justify-content-center container-fluid px-5'>
                 <div className='container-fluid px-5'>
-                    {isLoadingUserData || isLoadingLoginUser?
+                    {isLoadingUserData || isLoadingAuth?
                     (
                     <h1>Loading...</h1>
                     ):(

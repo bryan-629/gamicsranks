@@ -10,10 +10,11 @@ import { useEffect } from 'react';
 
 
 export default function Home() {
-  const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
+  const { user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal ,changeId  } = useAuthentication();
   useEffect(()=>{
-    console.log(showIdModal)
-  },[showIdModal])
+    console.log(showNewIdModal)
+  },[showNewIdModal])
+
   return (
     <div className='bg-dark vh-100'>
       <Navbar></Navbar>
