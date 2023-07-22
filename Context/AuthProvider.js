@@ -50,7 +50,7 @@ const useAuthenticationHook = () => {
 
     const response = await fetchData(process.env.NEXT_PUBLIC_API_URL + 'login.php', 'POST', form);
         console.log(response)
-        if (response) {
+        if (response != undefined && response != null) {
           if (response[0].id === "") {
             setShowNewIdModal(true);
           }
@@ -72,9 +72,7 @@ const useAuthenticationHook = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (userChanged) => {
-      console.log(userChanged)
       if (userChanged != null) {
-        console.log(userChanged)
         callLoginphp(userChanged)
       }
       setIsLoadingAuth(false);
