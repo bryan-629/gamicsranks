@@ -6,7 +6,7 @@ import LogOut from './LogOut'
 import { useAuthentication } from '../../Context/AuthProvider'
 import Link from 'next/link'
 function Navbar() {
-  const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal} = useAuthentication();
+  const { user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId} = useAuthentication();
 
   return(
         <nav className="navbar navbar-expand-lg bg-dark shadow " data-bs-theme="dark">
@@ -24,7 +24,7 @@ function Navbar() {
                   </Link>
                 </li>
                 
-                  {user && user != null?(
+                  {!isLoadingAuth && user != null?(
                     <>
                       <li className="nav-item px-4">
                       <Link className="nav-link active font-roboto" href={`/${user.id}`}>My profile</Link>
@@ -34,7 +34,7 @@ function Navbar() {
                     </li>
                   </>
                   ):(
-                  <LoginButton clases={'btn btn-primary font-roboto'}>Sign in</LoginButton>)}
+                  <LoginButton clases={'btn btn-primary font-roboto'} >Sign in</LoginButton>)}
                   
               </ul>
             </div>

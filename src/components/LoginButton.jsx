@@ -4,12 +4,13 @@ import { useAuthentication } from '../../Context/AuthProvider';
 
 function LoginButton({children, clases}) {
     
-    const { user, loading, signInWithGoogle, signOutUser,getUser } = useAuthentication();
+    const {  user, showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal, changeId, setIsLoadingAuth } = useAuthentication();
     const singIn = async () => {
-        await signInWithGoogle();
+      setIsLoadingAuth(true)
+      await signInWithGoogle();
     }
   return (
-    <button className={`${clases}`} onClick={singIn}>{children}</button>
+    <button className={`${clases}`} disabled={isLoadingAuth} onClick={singIn}>{children}</button>
   )
 }
 

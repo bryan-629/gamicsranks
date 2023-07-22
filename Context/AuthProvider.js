@@ -1,8 +1,9 @@
-import { db, } from '@/firebase';
+// useAuthentication.js
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getAuth, signInWithRedirect, signOut, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import useApi from '@/hooks/useApi';
 import { useRouter } from 'next/router';
+
 const AuthContext = createContext();
 
 export const useAuthentication = () => {
@@ -12,15 +13,24 @@ export const useAuthentication = () => {
 const useAuthenticationHook = () => {
   const auth = getAuth();
   const [user, setUser] = useState(null);
-  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [isLoadingAuth, setIsLoadingAuth] = useState();
   const googleProvider = new GoogleAuthProvider();
   const { data: dataSaveNewID, isLoading: isLoadingSaveNewID, error: saveNewIDError, fetchData: saveNewID } = useApi();
   const { data, isLoading, error, fetchData } = useApi();
   const [showNewIdModal, setShowNewIdModal] = useState(false);
   const [isLoadingLoginUser, setIsLoadingLoginUser] = useState(true);
-  const router = useRouter();
+
+
+  useEffect(() => {
+    if (user != null && isLoadingAuth) {
+      setIsLoadingAuth(false)
+    }
+  }, [user]);
+
+  
 
   const signInWithGoogle = async () => {
+    setIsLoadingAuth(true);
     try {
       await signInWithRedirect(auth, googleProvider);
     } catch (error) {
@@ -32,13 +42,13 @@ const useAuthenticationHook = () => {
     try {
       await signOut(auth);
       setUser(null);
-      router.push("/")
     } catch (error) {
       console.error('Error al cerrar sesión:', error.message);
     }
   };
-  const callLoginphp = async (userChanged) =>{
 
+  const callLoginphp = async (userChanged) => {
+    setIsLoadingAuth(true);
     const form = {
       "displayname": userChanged.displayName,
       "email": userChanged.email,
@@ -48,40 +58,55 @@ const useAuthenticationHook = () => {
       "uid": userChanged.uid
     };
 
-    const response = await fetchData(process.env.NEXT_PUBLIC_API_URL + 'login.php', 'POST', form);
-        console.log(response)
-        if (response != undefined && response != null) {
-          if (response[0].id === "") {
-            setShowNewIdModal(true);
-          }
-          setUser(response[0])
+    try {
+      const response = await fetchData(process.env.NEXT_PUBLIC_API_URL + 'login.php', 'POST', form);
+      console.log(response);
+      if (response != undefined && response != null) {
+        if (response[0].id === "") {
+          setShowNewIdModal(true);
         }
-       
-  }
+        setUser(response[0]);
+      }
+    } catch (error) {
+      console.error('Error al llamar a login.php:', error.message);
+    } finally {
+      setIsLoadingAuth(false);
+    }
+  };
 
   const changeId = async (newId) => {
+    setIsLoadingAuth(true);
     const sendData = {
       "id": encodeURI(newId.toUpperCase()),
       "uid": user.uid
     };
-    await saveNewID(process.env.NEXT_PUBLIC_API_URL + "saveNewId.php", "POST", sendData).then((response) => {
-        setUser({ ...user, "id": newId.toUpperCase() });
-        console.log(user);
-    });
+    try {
+      const response = await saveNewID(process.env.NEXT_PUBLIC_API_URL + "saveNewId.php", "POST", sendData);
+      setUser({ ...user, "id": newId.toUpperCase() });
+      console.log(user);
+    } catch (error) {
+      console.error('Error al cambiar el ID:', error.message);
+    } finally {
+      setIsLoadingAuth(false)
+    }
   };
 
   useEffect(() => {
+    setIsLoadingAuth(true)
     const unsubscribe = onAuthStateChanged(auth, (userChanged) => {
+      setIsLoadingAuth(false)
       if (userChanged != null) {
-        callLoginphp(userChanged)
+        callLoginphp(userChanged);
       }
-      setIsLoadingAuth(false);
     });
-
-    return () => unsubscribe();
+    
+    return () => {
+      unsubscribe();
+      
+    }
   }, []);
 
-  return { user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId};
+  return { user, showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal, changeId, setIsLoadingAuth };
 };
 
 export const AuthProvider = ({ children }) => {
