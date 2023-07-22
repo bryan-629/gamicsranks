@@ -94,6 +94,7 @@ const useAuthenticationHook = () => {
             setShowIdModal(true)
           }       
         }*/
+        setUser(userChanged)
       setIsLoadingLoginUser(false);
     });
     return () => unsubscribe();
