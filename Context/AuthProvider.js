@@ -1,4 +1,5 @@
 // useAuthentication.js
+import { db, app } from '@/firebase';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getAuth, signInWithRedirect, GoogleAuthProvider, getRedirectResult, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
@@ -12,7 +13,7 @@ export const useAuthentication = () => {
 
 const useAuthenticationHook = () => {
   const { data: dataSaveNewID, isLoading: isLoadingSaveNewID, error:  saveNewIDError, fetchData:saveNewID } = useApi();
-  const auth = getAuth();
+  const auth = getAuth(app);
   const { data, isLoading, error, fetchData } = useApi();
   const [user, setUser] = useState(null);
   const [showIdModal, setShowIdModal] = useState(false);
