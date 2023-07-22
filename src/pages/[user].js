@@ -25,7 +25,7 @@ function user(props) {
         userID:''
     }
     const auth = getAuth();
-    const { user ,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
+    const {  user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId  } = useAuthentication();
     const { cookies, setCookie, getCookie, deleteCookie } = useCookie();
     const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
     const { data: userData, isLoading: isLoadingUserData, error: userDataError, fetchData: getUserData } = useApi();
@@ -47,12 +47,12 @@ function user(props) {
   }
 
     useEffect(()=>{
-        if (!isLoadingLoginUser && user) {
+        if (!isLoadingAuth && user) {
             getData();
             //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
         };
 
-    },[isLoadingLoginUser,user])
+    },[isLoadingAuth,user])
 
     const handleClickDelete = async (e) =>{
         e.preventDefault;
@@ -74,7 +74,7 @@ function user(props) {
     }
 
     const showButtonNewMatch = () =>{ //control para mostrar el boton de añadir nueva partida
-        if (!isLoadingUserData && !isLoadingLoginUser) {
+        if (!isLoadingUserData && !isLoadingAuth) {
             if (userData && user) {
                 if (user.id == props.user.toUpperCase()) {
                     return true
@@ -108,7 +108,7 @@ function user(props) {
             </div>
             <div className='d-flex justify-content-center container-fluid px-5'>
                 <div className='container-fluid px-5'>
-                    {isLoadingUserData || isLoadingLoginUser?
+                    {isLoadingUserData || isLoadingAuth?
                     (
                     <h1>Loading...</h1>
                     ):(
