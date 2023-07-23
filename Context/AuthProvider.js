@@ -15,6 +15,7 @@ const useAuthenticationHook = () => {
   const route = useRouter()
   const auth = getAuth(app);
   const [user, setUser] = useState(null);
+  const [authError, setAuthError] = useState(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState();
   const googleProvider = new GoogleAuthProvider();
   const { data: dataSaveNewID, isLoading: isLoadingSaveNewID, error: saveNewIDError, fetchData: saveNewID } = useApi();
@@ -29,7 +30,16 @@ const useAuthenticationHook = () => {
     }
   }, [user]);
 
-  
+  useEffect(() => {
+    if (saveNewIDError) {
+      setAuthError(saveNewIDError)
+      signOutUser()
+    }
+    if (error) {
+      setAuthError(error)
+      signOutUser()
+    }
+  }, [saveNewIDError,error]);
 
   const signInWithGoogle = async () => {
     setIsLoadingAuth(true);
@@ -63,7 +73,7 @@ const useAuthenticationHook = () => {
 
     try {
       const response = await fetchData(process.env.NEXT_PUBLIC_API_URL + 'login.php', 'POST', form);
-      console.log(response);
+      console.log(error)
       if (response != undefined && response != null) {
         if (response[0].id === "") {
           setShowNewIdModal(true);
@@ -71,27 +81,27 @@ const useAuthenticationHook = () => {
         setUser(response[0]);
       }
     } catch (error) {
+      setAuthError()
       console.error('Error al llamar a login.php:', error.message);
     } finally {
       setIsLoadingAuth(false);
     }
   };
 
-  const changeId = async (newId) => {
+  const changeId = async (newId) => { //Funcion que cambia el id del usuario en el backend 
     setIsLoadingAuth(true);
     const sendData = {
       "id": encodeURI(newId.toUpperCase()),
       "uid": user.uid
     };
-    try {
-      const response = await saveNewID(process.env.NEXT_PUBLIC_API_URL + "saveNewId.php", "POST", sendData);
+      await saveNewID(process.env.NEXT_PUBLIC_API_URL + "saveNewId.php", "POST", sendData).then(()=>{
+        
+
+      });
       setUser({ ...user, "id": newId.toUpperCase() });
       setShowNewIdModal()
-    } catch (error) {
-      console.error('Error al cambiar el ID:', error.message);
-    } finally {
       setIsLoadingAuth(false)
-    }
+
   };
 
   useEffect(() => {
@@ -109,7 +119,7 @@ const useAuthenticationHook = () => {
     }
   }, []);
 
-  return { user, showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal, changeId, setIsLoadingAuth };
+  return { user, showNewIdModal, isLoadingAuth, authError, signInWithGoogle, signOutUser, setShowNewIdModal, changeId, setIsLoadingAuth };
 };
 
 export const AuthProvider = ({ children }) => {

@@ -7,6 +7,7 @@ import useApi from '@/hooks/useApi';
 import { useAuthentication } from '../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
 import { useRouter } from 'next/router';
+import AlertError from '../components/AlertError'
 
 function user(props) { //Perfil del usuario donde se muestran  todas las estadisticas
     
@@ -165,6 +166,11 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
           </Button>
         </Modal.Footer>
       </Modal>
+      <div className='fixed-top mt-5 d-flex justify-content-center flex-column align-items-center'>
+          <AlertError errorState={userDataError}>Error al recuperar las estadisticas</AlertError>
+          <AlertError errorState={insertError}>Error al guardar la partida</AlertError>
+          <AlertError errorState={deleteMatchError}>Error al borrar la partida</AlertError>
+        </div>
     </div>
 
     </>
