@@ -1,19 +1,16 @@
 import '../firebase'
 import LoginButton from '@/components/LoginButton';
 import Navbar from '@/components/Navbar';
-import { Button } from 'react-bootstrap';
+import { Button, Fade } from 'react-bootstrap';
 import Image from 'next/image';
 import price from "../../public/price.png"
-import { useAuthentication } from '../../Context/AuthProvider';
 import ModalFormulario from '@/components/ModalFormulario';
 import { useEffect } from 'react';
-
+import AlertError from '../components/AlertError'
+import { useAuthentication } from '../../Context/AuthProvider';
 
 export default function Home() {
-  const { user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal ,changeId  } = useAuthentication();
-  useEffect(()=>{
-    console.log(showNewIdModal)
-  },[showNewIdModal])
+  const { user, showNewIdModal, isLoadingAuth, authError, signInWithGoogle, signOutUser, setShowNewIdModal, changeId, setIsLoadingAuth } = useAuthentication();
 
   return (
     <div className='bg-dark vh-100'>
@@ -98,6 +95,10 @@ export default function Home() {
           </div>
         </div>
         <ModalFormulario></ModalFormulario>
+        <div className='fixed-top mt-5 d-flex justify-content-center  align-items-center'>
+          <AlertError errorState={authError}>Se ha producido un error en la autenticacion</AlertError>
+        </div>
+        
         <footer>
 
         </footer>
