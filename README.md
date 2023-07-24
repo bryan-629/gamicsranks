@@ -11,6 +11,9 @@ yarn dev
 # or
 pnpm dev
 ```
+DEPENDENCIAS: 
+npm install --save firebase
+npm install react-bootstrap bootstrap
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
