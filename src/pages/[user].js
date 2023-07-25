@@ -118,7 +118,8 @@ function getFechaArray(data) {
     const getData = async () => {
         await getMatches(process.env.NEXT_PUBLIC_API_URL + `getLastMatches.php?user=${props.user.toUpperCase()}`, "GET")
         await getUserStats(process.env.NEXT_PUBLIC_API_URL + `userStats.php?user=${props.user.toUpperCase()}`, "GET")
-        
+        console.log(userStats)
+
     }
 
     const showButtonNewMatch = () =>{ //control para mostrar el boton de añadir nueva partida
@@ -155,7 +156,7 @@ function getFechaArray(data) {
             
             <div className=' mx-4 mb-4 px-5'>
                 <div className='d-flex justify-content-around flex-row container-fluid px-5'>
-                        {userStats?
+                        {userStats != null?
                         (
                             <>
                             <div className='container-fluid mx-3 col-4 bg-card p-3 rounded'>
