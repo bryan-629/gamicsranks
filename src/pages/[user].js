@@ -118,7 +118,6 @@ function getFechaArray(data) {
     const getData = async () => {
         await getMatches(process.env.NEXT_PUBLIC_API_URL + `getLastMatches.php?user=${props.user.toUpperCase()}`, "GET")
         await getUserStats(process.env.NEXT_PUBLIC_API_URL + `userStats.php?user=${props.user.toUpperCase()}`, "GET")
-        console.log(userStats)
 
     }
 
