@@ -15,12 +15,11 @@ const useApi = () => {
         body: body ? JSON.stringify(body) : null
       };
       const response = await fetch(url, options);
-      
       if (!response.ok) {
         throw new Error('Error al realizar la solicitud');
       }
       const jsonData = await response.json();
-
+      
       if (jsonData.error) {
        
         throw new Error('Error al realizar la solicitud');
@@ -31,7 +30,6 @@ const useApi = () => {
       setIsLoading(false);
       return jsonData
     } catch (error) {
-  
       setError(error.message);
     }
 
