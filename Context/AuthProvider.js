@@ -22,6 +22,7 @@ const useAuthenticationHook = () => {
   const { data, isLoading, error, fetchData } = useApi();
   const [showNewIdModal, setShowNewIdModal] = useState(false);
   const [isLoadingLoginUser, setIsLoadingLoginUser] = useState(true);
+  const [userFromGoogle, setUserFromGoogle] = useState(null);
 
 
   useEffect(() => {
@@ -29,6 +30,13 @@ const useAuthenticationHook = () => {
       setIsLoadingAuth(false)
     }
   }, [user]);
+
+  useEffect(() => {
+    if (userFromGoogle != null) {
+      callLoginphp(userFromGoogle)
+    }
+  }, [userFromGoogle]);
+  
 
   useEffect(() => {
     if (saveNewIDError) {
@@ -62,30 +70,35 @@ const useAuthenticationHook = () => {
 
   const callLoginphp = async (userChanged) => {
     setIsLoadingAuth(true);
-    const form = {
-      "displayname": userChanged.displayName,
-      "email": userChanged.email,
-      "token": userChanged.stsTokenManager.accessToken,
-      "photo_url": userChanged.photoURL,
-      "emailVerified": userChanged.emailVerified,
-      "uid": userChanged.uid
-    };
-
-    try {
-      const response = await fetchData(process.env.NEXT_PUBLIC_API_URL + 'login.php', 'POST', form);
-      console.log(error)
-      if (response != undefined && response != null) {
-        if (response[0].id === "") {
-          setShowNewIdModal(true);
+    if (user == null) {
+      const form = {
+        "displayname": userChanged.displayName,
+        "email": userChanged.email,
+        "token": userChanged.stsTokenManager.accessToken,
+        "photo_url": userChanged.photoURL,
+        "emailVerified": userChanged.emailVerified,
+        "uid": userChanged.uid
+      };
+  
+      try {
+        const response = await fetchData(process.env.NEXT_PUBLIC_API_URL + 'login.php', 'POST', form);
+  
+        if (response != undefined && response != null) {
+          setUser(response[0]);
+          if (response[0].id === "") {
+            setShowNewIdModal(true);
+          }
+          
         }
-        setUser(response[0]);
+      } catch (error) {
+        setAuthError()
+        console.error('Error al llamar a login.php:', error.message);
+      } finally {
+        setIsLoadingAuth(false);
       }
-    } catch (error) {
-      setAuthError()
-      console.error('Error al llamar a login.php:', error.message);
-    } finally {
-      setIsLoadingAuth(false);
     }
+    
+    
   };
 
   const changeId = async (newId) => { //Funcion que cambia el id del usuario en el backend 
@@ -95,8 +108,6 @@ const useAuthenticationHook = () => {
       "uid": user.uid
     };
       await saveNewID(process.env.NEXT_PUBLIC_API_URL + "saveNewId.php", "POST", sendData).then(()=>{
-        
-
       });
       setUser({ ...user, "id": newId.toUpperCase() });
       setShowNewIdModal()
@@ -105,19 +116,16 @@ const useAuthenticationHook = () => {
   };
 
   useEffect(() => {
-    setIsLoadingAuth(true)
     const unsubscribe = onAuthStateChanged(auth, (userChanged) => {
+      setIsLoadingAuth(true)
+      setUserFromGoogle(userChanged)
       setIsLoadingAuth(false)
-      if (userChanged != null) {
-        callLoginphp(userChanged);
-      }
     });
-    
     return () => {
       unsubscribe();
-      
-    }
-  }, []);
+    };
+  }, []); 
+  
 
   return { user, showNewIdModal, isLoadingAuth, authError, signInWithGoogle, signOutUser, setShowNewIdModal, changeId, setIsLoadingAuth };
 };
