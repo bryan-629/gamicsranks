@@ -6,8 +6,7 @@ function AlertDismissibleExample({errorState,children}) {
   const [showError, setShowError] = useState(true);
   
   useEffect(()=>{
-    if (errorState) {
-      
+    if (errorState != null) {
       setShowError(true)
       return
     }
