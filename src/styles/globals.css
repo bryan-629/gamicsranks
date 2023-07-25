@@ -101,6 +101,12 @@
   background-image: url("../../public/Geometrias.png");
   background-repeat: no-repeat;
 }
+.bg-card{
+  background-color: #2C3034;
+}
+.text-muted-dark{
+  color: #a3a3a380;
+}
 
 @media (prefers-color-scheme: dark) {
   html {

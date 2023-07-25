@@ -8,6 +8,7 @@ import { useAuthentication } from '../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
 import { useRouter } from 'next/router';
 import AlertError from '../components/AlertError'
+import LineChart from '@/components/LineChart';
 
 function user(props) { //Perfil del usuario donde se muestran  todas las estadisticas
     
@@ -26,24 +27,86 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     const {  user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId  } = useAuthentication();
     const { cookies, setCookie, getCookie, deleteCookie } = useCookie();
     const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
-    const { data: userData, isLoading: isLoadingUserData, error: userDataError, fetchData: getUserData } = useApi();
+    const { data: userStats, isLoading: isUserStatsLoading, error: userStatsError, fetchData: getUserStats } = useApi();
+    const { data: matches, isLoading: isLoadingMatches, error: matchesError, fetchData: getMatches } = useApi();
     const { data: deleteMatchInfo, isLoading: isLoadingDeleteMatch, error: deleteMatchError, fetchData: deleteMatch } = useApi();
     const [showAddButton, setShowAddButton] = new useState(false)
     const [form, setForm] = useState(initialForm)
     const [show, setShow] = useState(false);// ESTADO DE LA MODAL
+    const [fechaArray, setFechaArray] = useState(false);
+    const [srPorPartidaArray, setSrPorPartida] = useState(false);
+    const [kdArray, setKdArray] = useState(false);
+    const [muertesTotalesArray, setMuertesTotales] = useState(false);
+    const [porcentajeVictoriasArray, setPorcentajeVictoriasArray] = useState(false);
+    const [killsTotalesArray, setKillsTotalesArray] = useState(false);
 
+    //Use Effect para cuando se renderiza por primera vez.
+    useEffect(()=>{ 
+        getData();
+        //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
+    },[])
+
+    //Use Effect para cuando haya algun cambio en las partidas
+    useEffect(()=>{ 
+        if (userStats) {
+            setFechaArray(getFechaArray(userStats.datosDeCadaDia));
+            setSrPorPartida(getSrPorPartidaArray(userStats.datosDeCadaDia));
+            setKdArray(getKdArray(userStats.datosDeCadaDia));
+            setMuertesTotales(getMuertesTotalesArray(userStats.datosDeCadaDia));
+            setPorcentajeVictoriasArray(getPorcentajeVictoriasArray(userStats.datosDeCadaDia));
+            setKillsTotalesArray(getKillsTotalesArray(userStats.datosDeCadaDia));
+        }
+    },[userStats])
+    
+    
+
+    // Función para obtener un array con las fechas
+function getFechaArray(data) {
+    const fechaArray = data.map(item => item.fecha);
+    return fechaArray;
+  }
+  
+    // Función para obtener un array con los SR por partida
+  function getSrPorPartidaArray(data) {
+    const srPorPartidaArray = data.map(item => item.puntos_ganados_perdidos);
+    return srPorPartidaArray;
+  }
+  
+    // Función para obtener un array con los KD
+  function getKdArray(data) {
+    const kdArray = data.map(item => item.kd_promedio);
+    return kdArray;
+  }
+  
+    // Función para obtener un array con las muertes totales
+  function getMuertesTotalesArray(data) {
+    const muertesTotalesArray = data.map(item => item.muertes_totales);
+    return muertesTotalesArray;
+  }
+  
+    // Función para obtener un array con el porcentaje de victorias
+  function getPorcentajeVictoriasArray(data) {
+    const porcentajeVictoriasArray = data.map(item => item.porcentaje_victorias);
+    return porcentajeVictoriasArray;
+  }
+    // Función para obtener un array con las kills totales
+  function getKillsTotalesArray(data) {
+    const porcentajeVictoriasArray = data.map(item => item.kills_totales);
+    return porcentajeVictoriasArray;
+  }
+  //Funcion para cuando se cierra el modal
   const handleCloseModal = () => {// CERRAR MODAL 
     setForm({ ...form, userID: '' });// si cierra el formulario, reseateamos el valor a por defecto, por si luego hay cambios de usuario.
     setShow(false);
   }
+
+  //Funcion para cuando se abre el modal.
   const handleOpenModal = () => { //ABRIR MODAL
     setForm({ ...form, userID: user.id }); //Si abre el formulario, preparamos ya el usuario que lo esta abriendo.
     setShow(true);
   }
-    useEffect(()=>{ //segun arranca la pagina consultamos datos del usuario que esta buscando
-            getData();
-            //setCookie("accessToken",user.stsTokenManager.accessToken,user.stsTokenManager.expirationTime)
-    },[])
+
+    
 
     const handleClickDelete = async (e) =>{
         e.preventDefault;
@@ -53,12 +116,14 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
 
 
     const getData = async () => {
-        await getUserData(process.env.NEXT_PUBLIC_API_URL + "userProfile.php", "POST", {"userID" : props.user.toUpperCase()})
+        await getMatches(process.env.NEXT_PUBLIC_API_URL + `getLastMatches.php?user=${props.user.toUpperCase()}`, "GET")
+        await getUserStats(process.env.NEXT_PUBLIC_API_URL + `userStats.php?user=${props.user.toUpperCase()}`, "GET")
+        
     }
 
     const showButtonNewMatch = () =>{ //control para mostrar el boton de añadir nueva partida
-        if (!isLoadingUserData && !isLoadingAuth) {
-            if (userData && user) {
+        if (!isLoadingMatches && !isLoadingAuth) {
+            if (matches && user) {
                 if (user.id == props.user.toUpperCase()) {
                     return true
                 }else{
@@ -79,24 +144,80 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter p-5'>
         
         <div className='container-fluid'>
-            <div>
-                <h1 className='text-uppercase'>{props.user}</h1>
-            </div>
-            <div className='d-flex justify-content-center '>
-                <h1 className='text-uppercase'>historial</h1>
+            <div className='mx-5'>
+                <div className='mx-5'>
+                    <div className='mb-3 d-flex flex-row justify-content-between'>
+                        <h3 className='text-uppercase'>{props.user}</h3>
+                        {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
+                    </div>
+                </div>
             </div>
             
-            <div className='d-flex justify-content-center py-3'>
-            {showButtonNewMatch() ? (<Button variant="primary" onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
+            <div className=' mx-4 mb-4 px-5'>
+                <div className='d-flex justify-content-around flex-row container-fluid px-5'>
+                        {userStats?
+                        (
+                            <>
+                            <div className='container-fluid mx-3 col-4 bg-card p-3 rounded'>
+                                <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Kills deaths ratio</p>
+                                <h1 className={`px-1 font-bebas`}>{userStats.datosGenerales.kd_promedio}</h1>
+                                <LineChart 
+                                  killsTotalesArray={killsTotalesArray} 
+                                  muertesTotalesArray={muertesTotalesArray} 
+                                  fechaArray={fechaArray} 
+                                  srPorPartidaArray={null} 
+                                  porcentajeVictoriasArray={null} 
+                                  kdArray={kdArray}>
+                                </LineChart>
+                            </div>
+                            <div className='container-fluid mx-3 col-4 bg-card p-3 rounded'>
+                                <p className='text-muted-dark mb-0 font-roboto text-uppercase'>SR</p>
+                                <h1 className={`px-1 font-bebas ${userStats.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.datosGenerales.sr_ganados_perdidos):(userStats.datosGenerales.sr_ganados_perdidos)} </h1>
+                                <LineChart 
+                                  killsTotalesArray={null} 
+                                  muertesTotalesArray={null} 
+                                  fechaArray={fechaArray}
+                                  srPorPartidaArray={srPorPartidaArray} 
+                                  porcentajeVictoriasArray={null} 
+                                  kdArray={null}>
+                                </LineChart>
+                            </div>
+                            <div className='container-fluid mx-3 col-4 bg-card p-3 rounded'>
+                                <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Wins%</p>
+                                <h1 className=' px-1  font-bebas'>{userStats.datosGenerales.porcentaje_victorias + "%" }</h1>
+                                <LineChart 
+                                  killsTotalesArray={null} 
+                                  muertesTotalesArray={null} 
+                                  fechaArray={fechaArray} 
+                                  porcentajeVictoriasArray={porcentajeVictoriasArray} 
+                                  kdArray={null}>
+                                </LineChart>
+                            </div>
+                            </>
+                        ):
+                        (
+                            null
+                        )
+                        }
+                        
+                </div>
             </div>
+            <div className='mx-5'>
+                <div className='mx-5'>
+                    <div className='mb-3'>
+                        <h5 className='text-uppercase'>Last matches</h5>
+                    </div>
+                </div>
+            </div>
+            
             <div className='d-flex justify-content-center container-fluid px-5'>
                 <div className='container-fluid px-5'>
-                    {isLoadingUserData || isLoadingAuth?
+                    {isLoadingMatches || isLoadingAuth?
                     (
                     <h1>Loading...</h1>
                     ):(
-                        userData?(
-                            <Table matches={userData} handleClickDelete={handleClickDelete}></Table>
+                        matches?(
+                            <Table matches={matches} handleClickDelete={handleClickDelete}></Table>
                             ):(
                                 <h1>Vacio...</h1>
                             )
@@ -167,7 +288,7 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
         </Modal.Footer>
       </Modal>
       <div className='fixed-top mt-5 d-flex justify-content-center flex-column align-items-center'>
-          <AlertError errorState={userDataError}>Error al recuperar las estadisticas</AlertError>
+          <AlertError errorState={matchesError}>Error al recuperar las estadisticas</AlertError>
           <AlertError errorState={insertError}>Error al guardar la partida</AlertError>
           <AlertError errorState={deleteMatchError}>Error al borrar la partida</AlertError>
         </div>
