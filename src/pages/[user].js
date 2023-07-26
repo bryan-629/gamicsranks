@@ -142,8 +142,10 @@ function getFechaArray(data) {
     <>
     <Navbar></Navbar>
     <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid px-5 py-4'>
-      <div className='container-fluid px-5'>
-        <div className='container-fluid px-5'>
+      <div className='container '>
+      
+      
+        
         <div className=''>
           <div className='mb-3 d-flex flex-row justify-content-between'>
               <h3 className='text-uppercase'>{props.user}</h3>
@@ -295,10 +297,6 @@ function getFechaArray(data) {
       ):(
         null
         )}
-        </div>
-      
-        
-        
      </div>
     </div>
 
