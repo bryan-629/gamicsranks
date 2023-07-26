@@ -141,77 +141,78 @@ function getFechaArray(data) {
   return (
     <>
     <Navbar></Navbar>
-    <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter p-5'>
+    <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid px-5 py-4'>
+      <div className='container'>
+
+      
         
-        <div className='container-fluid'>
-            <div className='mx-5'>
-                <div className='mx-5'>
-                    <div className='mb-3 d-flex flex-row justify-content-between'>
-                        <h3 className='text-uppercase'>{props.user}</h3>
-                        {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
-                    </div>
-                </div>
+        <div className=''>
+          <div className='mb-3 d-flex flex-row justify-content-between'>
+              <h3 className='text-uppercase'>{props.user}</h3>
+              {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
+          </div>
+          <div className='container'>
+             <div className='d-flex justify-content-between row mb-4'>
+                    {userStats != null?
+                    (
+                        <>
+                        <div className='col-md-4 col-sm-12 p-0 pe-md-2'>
+                          <div className='bg-card p-3 rounded'>
+                            <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Kills deaths ratio</p>
+                              <h1 className={`px-1 font-bebas`}>{userStats.datosGenerales.kd_promedio}</h1>
+                              <LineChart 
+                                killsTotalesArray={killsTotalesArray} 
+                                muertesTotalesArray={muertesTotalesArray} 
+                                fechaArray={fechaArray} 
+                                srPorPartidaArray={null} 
+                                porcentajeVictoriasArray={null} 
+                                kdArray={kdArray}>
+                              </LineChart>
+                          </div>
+                        </div>
+
+                        <div className='col-md-4 p-0 col-sm-12 px-md-1 h-100'>
+                          <div className='bg-card p-3 rounded h-100'>
+                            <p className='text-muted-dark mb-0 font-roboto text-uppercase'>SR</p>
+                            <h1 className={`px-1 font-bebas ${userStats.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.datosGenerales.sr_ganados_perdidos):(userStats.datosGenerales.sr_ganados_perdidos)} </h1>
+                            <LineChart 
+                              killsTotalesArray={null} 
+                              muertesTotalesArray={null} 
+                              fechaArray={fechaArray}
+                              srPorPartidaArray={srPorPartidaArray} 
+                              porcentajeVictoriasArray={null} 
+                              kdArray={null}>
+                            </LineChart>
+                          </div>
+                        </div>
+                        <div className='col-md-4 p-0 col-sm-12 ps-md-2'>
+                          <div className='bg-card p-3 rounded'>
+                            <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Wins%</p>
+                            <h1 className=' px-1  font-bebas'>{userStats.datosGenerales.porcentaje_victorias + "%" }</h1>
+                            <LineChart 
+                              killsTotalesArray={null} 
+                              muertesTotalesArray={null} 
+                              fechaArray={fechaArray} 
+                              porcentajeVictoriasArray={porcentajeVictoriasArray} 
+                              kdArray={null}>
+                            </LineChart>
+                          </div>
+                        </div>
+                        </>
+                    ):
+                    (
+                        null
+                    )
+                    }
+            </div>
+          </div>
+            
+            <div className='mb-3'>
+                <h5 className='text-uppercase'>Last matches</h5>
             </div>
             
-            <div className=' mx-4 mb-4 px-5'>
-                <div className='d-flex justify-content-around flex-row container-fluid px-5'>
-                        {userStats != null?
-                        (
-                            <>
-                            <div className='container-fluid mx-3 col-4 bg-card p-3 rounded'>
-                                <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Kills deaths ratio</p>
-                                <h1 className={`px-1 font-bebas`}>{userStats.datosGenerales.kd_promedio}</h1>
-                                <LineChart 
-                                  killsTotalesArray={killsTotalesArray} 
-                                  muertesTotalesArray={muertesTotalesArray} 
-                                  fechaArray={fechaArray} 
-                                  srPorPartidaArray={null} 
-                                  porcentajeVictoriasArray={null} 
-                                  kdArray={kdArray}>
-                                </LineChart>
-                            </div>
-                            <div className='container-fluid mx-3 col-4 bg-card p-3 rounded'>
-                                <p className='text-muted-dark mb-0 font-roboto text-uppercase'>SR</p>
-                                <h1 className={`px-1 font-bebas ${userStats.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.datosGenerales.sr_ganados_perdidos):(userStats.datosGenerales.sr_ganados_perdidos)} </h1>
-                                <LineChart 
-                                  killsTotalesArray={null} 
-                                  muertesTotalesArray={null} 
-                                  fechaArray={fechaArray}
-                                  srPorPartidaArray={srPorPartidaArray} 
-                                  porcentajeVictoriasArray={null} 
-                                  kdArray={null}>
-                                </LineChart>
-                            </div>
-                            <div className='container-fluid mx-3 col-4 bg-card p-3 rounded'>
-                                <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Wins%</p>
-                                <h1 className=' px-1  font-bebas'>{userStats.datosGenerales.porcentaje_victorias + "%" }</h1>
-                                <LineChart 
-                                  killsTotalesArray={null} 
-                                  muertesTotalesArray={null} 
-                                  fechaArray={fechaArray} 
-                                  porcentajeVictoriasArray={porcentajeVictoriasArray} 
-                                  kdArray={null}>
-                                </LineChart>
-                            </div>
-                            </>
-                        ):
-                        (
-                            null
-                        )
-                        }
-                        
-                </div>
-            </div>
-            <div className='mx-5'>
-                <div className='mx-5'>
-                    <div className='mb-3'>
-                        <h5 className='text-uppercase'>Last matches</h5>
-                    </div>
-                </div>
-            </div>
-            
-            <div className='d-flex justify-content-center container-fluid px-5'>
-                <div className='container-fluid px-5'>
+            <div className='d-flex justify-content-center w-100'>
+                <div className='w-100'>
                     {isLoadingMatches || isLoadingAuth?
                     (
                     <h1>Loading...</h1>
@@ -287,11 +288,16 @@ function getFechaArray(data) {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div className='fixed-top mt-5 d-flex justify-content-center flex-column align-items-center'>
+      {matchesError || insertError || deleteMatchError?(
+        <div className='fixed-top mt-5 d-flex justify-content-center flex-column align-items-center'>
           <AlertError errorState={matchesError}>Error al recuperar las estadisticas</AlertError>
           <AlertError errorState={insertError}>Error al guardar la partida</AlertError>
           <AlertError errorState={deleteMatchError}>Error al borrar la partida</AlertError>
         </div>
+      ):(
+        null
+        )}
+     </div>
     </div>
 
     </>
