@@ -151,6 +151,9 @@ function getFechaArray(data) {
               <h3 className='text-uppercase'>{props.user}</h3>
               {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
           </div>
+          <div className='mb-3'>
+                <h5 className='text-uppercase'>User Stats</h5>
+            </div>
           <div className='container-fluid'>
              <div className='d-flex justify-content-between row mb-4'>
                     {userStats != null?

@@ -112,6 +112,11 @@ function LineChart({killsTotalesArray, muertesTotalesArray, fechaArray,srPorPart
             intersect: false,
             mode: 'index',
           },
+          scales:{
+            x: {
+              display:false
+            }
+          },
           plugins:{
             legend: {
                 display : false
