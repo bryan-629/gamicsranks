@@ -142,16 +142,14 @@ function getFechaArray(data) {
     <>
     <Navbar></Navbar>
     <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid px-5 py-4'>
-      <div className='container'>
-
-      
-        
+      <div className='container-fluid px-5'>
+        <div className='container-fluid px-5'>
         <div className=''>
           <div className='mb-3 d-flex flex-row justify-content-between'>
               <h3 className='text-uppercase'>{props.user}</h3>
               {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
           </div>
-          <div className='container'>
+          <div className='container-fluid'>
              <div className='d-flex justify-content-between row mb-4'>
                     {userStats != null?
                     (
@@ -297,6 +295,10 @@ function getFechaArray(data) {
       ):(
         null
         )}
+        </div>
+      
+        
+        
      </div>
     </div>
 
