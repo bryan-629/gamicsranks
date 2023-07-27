@@ -152,8 +152,6 @@ function getFechaArray(data) {
       }else{
         await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"insertMatch.php", "POST", form);
       }
-
-        
         getData()
     }
 

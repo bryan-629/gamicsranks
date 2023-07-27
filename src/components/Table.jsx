@@ -31,7 +31,7 @@ function Table({matches,handleClickDelete,handleEdit}) {
                     {matches.map((match,index)=>{
                         const fecha = new Date(match.date_time)
                         match.sr = calculatePreviousPointDifferences(match, index)
-                       
+                       if (matches.length -1  >  index ) {
                         return(
                             <tr className='' key={match.id} id={match.id}>
                                 <th scope="row">{match.result}</th>
@@ -52,6 +52,8 @@ function Table({matches,handleClickDelete,handleEdit}) {
                                 </td>
                     </tr>
                         )
+                       }
+                       
                     })}
                 </tbody>
             </table>
