@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useAuthentication } from '../../Context/AuthProvider';
-function Table({matches,handleClickDelete}) {
+function Table({matches,handleClickDelete,handleEdit}) {
   const { user,showIdModal, isLoadingLoginUser, signInWithGoogle, signOutUser, getUser,setShowIdModal } = useAuthentication();
   const calculatePreviousPointDifferences = (match, index) => {
     if (index == matches.length -1) {
@@ -47,6 +47,7 @@ function Table({matches,handleClickDelete}) {
                                 
                                 <td>{match.srTotal}</td>
                                 <td>
+                                    <button className={`btn btn-primary mx-2 btn-sm ${match.id}`} onClick={(e)=>{handleEdit(e)}} size="sm">Editar</button>
                                     <button className={`btn btn-danger mx-2 btn-sm ${match.id}`} onClick={(e)=>{handleClickDelete(e)}} size="sm">Delete</button>
                                 </td>
                     </tr>
