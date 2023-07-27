@@ -95,8 +95,8 @@ function getFechaArray(data) {
     return porcentajeVictoriasArray;
   }
   //Funcion para cuando se cierra el modal
-  const handleCloseModal = () => {// CERRAR MODAL 
-    setForm({ ...form, userID: '' });// si cierra el formulario, reseateamos el valor a por defecto, por si luego hay cambios de usuario.
+  const handleCloseModal = () => {// CERRAR MODAL
+    setForm(initialForm) 
     setShow(false);
   }
 
@@ -113,7 +113,18 @@ function getFechaArray(data) {
         await deleteMatch(process.env.NEXT_PUBLIC_API_URL + "deleteMatch.php", "POST", {"matchID" : e.target.parentElement.parentElement.id});
         getData()
     }
-
+    const handleEdit = async (e) =>{
+      e.preventDefault;
+      const idClicked = e.target.parentElement.parentElement.id
+      matches.filter((match)=>{
+        if (match.id == idClicked) {
+          handleOpenModal()
+          setForm(match)
+        }
+      })
+      
+      
+  }
 
     const getData = async () => {
         await getMatches(process.env.NEXT_PUBLIC_API_URL + `getLastMatches.php?user=${props.user.toUpperCase()}`, "GET")
@@ -133,8 +144,16 @@ function getFechaArray(data) {
         }
     }
     
-    const storeGameInDatabase = async (e) =>{
+    const storeOrUpdateGameInDatabase = async (e) =>{
+
+      if (form.id) {
+        await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"updateMatch.php", "POST", form);
+        
+      }else{
         await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"insertMatch.php", "POST", form);
+      }
+
+        
         getData()
     }
 
@@ -221,7 +240,7 @@ function getFechaArray(data) {
                     <h1>Loading...</h1>
                     ):(
                         matches?(
-                            <Table matches={matches} handleClickDelete={handleClickDelete}></Table>
+                            <Table matches={matches} handleClickDelete={handleClickDelete} handleEdit={handleEdit}></Table>
                             ):(
                                 <h1>Vacio...</h1>
                             )
@@ -285,7 +304,7 @@ function getFechaArray(data) {
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => {storeGameInDatabase() 
+          <Button variant="primary" onClick={() => {storeOrUpdateGameInDatabase() 
             handleCloseModal()}}>
             Save Changes
           </Button>
