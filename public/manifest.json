@@ -1,7 +1,7 @@
 {
     "theme_color": "#FF4545",
     "background_color": "#FF4545",
-    "display": "fullscreen",
+    "display": "standalone",
     "scope": "/",
     "start_url": "/",
     "name": "Gamics",
