@@ -1,6 +1,7 @@
 import '../firebase'
 import LoginButton from '@/components/LoginButton';
 import Navbar from '@/components/Navbar';
+import CustomNavbar from '@/components/CustomNavbar';
 import { Button, Fade } from 'react-bootstrap';
 import Image from 'next/image';
 import price from "../../public/price.png"
@@ -14,7 +15,7 @@ export default function Home() {
 
   return (
     <div className='bg-dark vh-100'>
-      <Navbar></Navbar>
+      <CustomNavbar></CustomNavbar>
       <div className=" background-container bg-dark container-fluid  " style={{ height: "calc(100vh - 60px )" }}>
         <div className='container d-flex justify-content-center align-items-center h-100'>
           <div className='col-md-7 col-sm-12'>
