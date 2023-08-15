@@ -11,7 +11,7 @@ const CustomNavbar = () => {
   const { user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId} = useAuthentication();
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar bg="dark" className='shadow' variant="dark" expand="lg">
       <div className='container-fluid'>
       <Navbar.Brand href="/"><Image src={logo} width={127} height={29} alt='logo'></Image></Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
