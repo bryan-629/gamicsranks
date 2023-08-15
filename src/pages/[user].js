@@ -2,7 +2,7 @@ import { useState,useEffect,useContext } from 'react'
 import Table from '@/components/Table'
 import { Modal,Button, Form } from 'react-bootstrap'
 import '../firebase'
-import Navbar from '@/components/Navbar';
+import CustomNavbar from '@/components/CustomNavbar'
 import useApi from '@/hooks/useApi';
 import { useAuthentication } from '../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
@@ -157,7 +157,7 @@ function getFechaArray(data) {
 
   return (
     <>
-    <Navbar></Navbar>
+    <CustomNavbar></CustomNavbar>
     <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid px-5 py-4'>
       <div className='container '>
       
