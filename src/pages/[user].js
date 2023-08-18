@@ -9,7 +9,7 @@ import useCookie from '@/hooks/useCookie';
 import { useRouter } from 'next/router';
 import AlertError from '../components/AlertError'
 import LineChart from '@/components/LineChart';
-
+import Image from 'next/image'
 function user(props) { //Perfil del usuario donde se muestran  todas las estadisticas
     
     const route = useRouter()
@@ -39,6 +39,7 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     const [muertesTotalesArray, setMuertesTotales] = useState(false);
     const [porcentajeVictoriasArray, setPorcentajeVictoriasArray] = useState(false);
     const [killsTotalesArray, setKillsTotalesArray] = useState(false);
+  
 
     //Use Effect para cuando se renderiza por primera vez.
     useEffect(()=>{ 
@@ -165,8 +166,11 @@ function getFechaArray(data) {
         
         <div className=''>
           <div className='mb-3 d-flex flex-row justify-content-between'>
-              <h3 className='text-uppercase'>{props.user}</h3>
-              {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
+            <div className='d-flex flex-row justify-content-center align-items-center'>
+              
+              <h3 className='text-uppercase '>{props.user}</h3>
+            </div>
+              {showButtonNewMatch() ? (<Button variant="primary btn"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
           </div>
           <div className='mb-3'>
                 <h5 className='text-uppercase'>User Stats</h5>
