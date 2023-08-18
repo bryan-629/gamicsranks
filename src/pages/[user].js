@@ -175,9 +175,6 @@ function getFechaArray(data) {
 
 
     if (!isLoading) {
-      if (userStats.data.datosGenerales) {
-        
-      }
       return(
         <>
     
@@ -190,7 +187,14 @@ function getFechaArray(data) {
             <div className=''>
               <div className='mb-3 d-flex flex-row justify-content-between'>
                 <div className='d-flex flex-row justify-content-center align-items-center'>
-                  <h2 className='text-uppercase '>{props.user}</h2>
+                  <Image src={userStats.data.userInfo.photo_url}
+                    alt="UserName profile image"
+                    className=' align-content-center rounded-circle mb-2 flex-row'
+                    width={60}
+                    height={60}
+                    roundedCircle = {true}>
+                    </Image>
+                  <h2 className='text-uppercase mx-3'>{props.user}</h2>
                 </div>
                 <div className='d-flex align-items-center'>
                   {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
