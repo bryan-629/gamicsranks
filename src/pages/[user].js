@@ -30,7 +30,6 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     const { cookies, setCookie, getCookie, deleteCookie } = useCookie();
     const { data: insertData, isLoading: isInserting, error: insertError, fetchData: insertDataRequest } = useApi();
     const { data: userStats, isLoading: isUserStatsLoading, error: userStatsError, fetchData: getUserStats } = useApi();
-    const { data: matches, isLoading: isLoadingMatches, error: matchesError, fetchData: getMatches } = useApi();
     const { data: deleteMatchInfo, isLoading: isLoadingDeleteMatch, error: deleteMatchError, fetchData: deleteMatch } = useApi();
     const [showAddButton, setShowAddButton] = new useState(false)
     const [form, setForm] = useState(initialForm)
@@ -44,11 +43,11 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(()=>{
-      if (matches && user && userStats) {
+      if ( user && userStats) {
         setIsLoading(false)
       }
 
-    },[matches,user,userStats])
+    },[user,userStats])
   
 
     //Use Effect para cuando se renderiza por primera vez.
@@ -59,13 +58,22 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
 
     //Use Effect para cuando haya algun cambio en las partidas
     useEffect(()=>{ 
+      
         if (userStats) {
-            setFechaArray(getFechaArray(userStats.datosDeCadaDia));
-            setSrPorPartida(getSrPorPartidaArray(userStats.datosDeCadaDia));
-            setKdArray(getKdArray(userStats.datosDeCadaDia));
-            setMuertesTotales(getMuertesTotalesArray(userStats.datosDeCadaDia));
-            setPorcentajeVictoriasArray(getPorcentajeVictoriasArray(userStats.datosDeCadaDia));
-            setKillsTotalesArray(getKillsTotalesArray(userStats.datosDeCadaDia));
+            if (userStats.status == 404 ) {
+              route.push("/404")
+            }else{
+              if (userStats.data?.datosGenerales) {
+                setFechaArray(getFechaArray(userStats.data.datosDeCadaDia));
+                setSrPorPartida(getSrPorPartidaArray(userStats.data.datosDeCadaDia));
+                setKdArray(getKdArray(userStats.data.datosDeCadaDia));
+                setMuertesTotales(getMuertesTotalesArray(userStats.data.datosDeCadaDia));
+                setPorcentajeVictoriasArray(getPorcentajeVictoriasArray(userStats.data.datosDeCadaDia));
+                setKillsTotalesArray(getKillsTotalesArray(userStats.data.datosDeCadaDia));
+              }
+              
+            }
+
         }
     },[userStats])
     
@@ -127,7 +135,7 @@ function getFechaArray(data) {
     const handleEdit = async (e) =>{
       e.preventDefault;
       const idClicked = e.target.parentElement.parentElement.id
-      matches.filter((match)=>{
+      userStats.data.matches.filter((match)=>{
         if (match.id == idClicked) {
           handleOpenModal()
           setForm(match)
@@ -138,14 +146,13 @@ function getFechaArray(data) {
   }
 
     const getData = async () => {
-        await getMatches(process.env.NEXT_PUBLIC_API_URL + `getLastMatches.php?user=${props.user.toUpperCase()}`, "GET")
         await getUserStats(process.env.NEXT_PUBLIC_API_URL + `userStats.php?user=${props.user.toUpperCase()}`, "GET")
 
     }
 
     const showButtonNewMatch = () =>{ //control para mostrar el boton de añadir nueva partida
-        if (!isLoadingMatches && !isLoadingAuth) {
-            if (matches && user) {
+        if (!isUserStatsLoading && !isLoadingAuth) {
+            if (userStats && user) {
                 if (user.id == props.user.toUpperCase()) {
                     return true
                 }else{
@@ -168,11 +175,14 @@ function getFechaArray(data) {
 
 
     if (!isLoading) {
+      if (userStats.data.datosGenerales) {
+        
+      }
       return(
         <>
     
         <CustomNavbar></CustomNavbar>
-        <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid px-5 py-4'>
+        <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid py-4'>
           <div className='container '>
           
           
@@ -182,20 +192,22 @@ function getFechaArray(data) {
                 <div className='d-flex flex-row justify-content-center align-items-center'>
                   <h2 className='text-uppercase '>{props.user}</h2>
                 </div>
-                  {showButtonNewMatch() ? (<Button variant="primary btn"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
+                <div className='d-flex align-items-center'>
+                  {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
+                </div> 
               </div>
-              <div className='mb-3'>
-                    <h6 className='text-uppercase text-muted-dark'>User Stats</h6>
-                </div>
+              <div className='mb-2'>
+                  <h6 className='text-uppercase text-muted-dark'> User Stats</h6>
+              </div>
               <div className='container-fluid'>
                  <div className='d-flex justify-content-between row mb-4'>
-                        {userStats != null?
+                        {userStats.data?.datosGenerales?
                         (
                             <>
                             <div className='col-md-4 col-sm-12 p-0 pe-md-2'>
                               <div className='bg-card p-3 rounded'>
                                 <p className='text-muted-dark mb-0 mx-1 font-roboto text-uppercase'>Kills deaths ratio</p>
-                                  <h1 className={`px-1 font-bebas`}>{userStats.datosGenerales.kd_promedio}</h1>
+                                  <h1 className={`px-1 font-bebas`}>{userStats.data.datosGenerales.kd_promedio}</h1>
                                   <LineChart 
                                     killsTotalesArray={killsTotalesArray} 
                                     muertesTotalesArray={muertesTotalesArray} 
@@ -210,7 +222,7 @@ function getFechaArray(data) {
                             <div className='col-md-4 p-0 col-sm-12 px-md-1 h-100'>
                               <div className='bg-card p-3 rounded h-100'>
                                 <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>SR</p>
-                                <h1 className={`px-1 font-bebas ${userStats.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.datosGenerales.sr_ganados_perdidos):(userStats.datosGenerales.sr_ganados_perdidos)} </h1>
+                                <h1 className={`px-1 font-bebas ${userStats.data.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.data.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.data.datosGenerales.sr_ganados_perdidos):(userStats.data.datosGenerales.sr_ganados_perdidos)} </h1>
                                 <LineChart 
                                   killsTotalesArray={null} 
                                   muertesTotalesArray={null} 
@@ -224,7 +236,7 @@ function getFechaArray(data) {
                             <div className='col-md-4 p-0 col-sm-12 ps-md-2'>
                               <div className='bg-card p-3 rounded'>
                                 <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>Wins%</p>
-                                <h1 className=' px-1  font-bebas'>{userStats.datosGenerales.porcentaje_victorias + "%" }</h1>
+                                <h1 className=' px-1  font-bebas'>{userStats.data.datosGenerales.porcentaje_victorias + "%" }</h1>
                                 <LineChart 
                                   killsTotalesArray={null} 
                                   muertesTotalesArray={null} 
@@ -243,22 +255,17 @@ function getFechaArray(data) {
                 </div>
               </div>
                 
-                <div className='mb-3'>
+                <div className='mb-2'>
                     <h6 className='text-uppercase text-muted-dark'>Last matches</h6>
                 </div>
                 
                 <div className='d-flex justify-content-center w-100'>
                     <div className='w-100'>
-                        {isLoadingMatches || isLoadingAuth?
-                        (
-                        <h1>Loading...</h1>
-                        ):(
-                            matches?(
-                                <Table matches={matches} handleClickDelete={handleClickDelete} handleEdit={handleEdit}></Table>
-                                ):(
-                                    <h1>Vacio...</h1>
-                                )
-                            )}
+                      {userStats.data?.matches? 
+                      (<Table matches={userStats.data.matches} handleClickDelete={handleClickDelete} handleEdit={handleEdit}></Table>)
+                      :
+                      (null)}
+                            
                     </div>
                 </div>
             </div>
@@ -324,9 +331,9 @@ function getFechaArray(data) {
               </Button>
             </Modal.Footer>
           </Modal>
-          {matchesError || insertError || deleteMatchError?(
+          {userStats || insertError || deleteMatchError?(
             <div className='fixed-top mt-5 d-flex justify-content-center flex-column align-items-center'>
-              <AlertError errorState={matchesError}>Error al recuperar las estadisticas</AlertError>
+              <AlertError errorState={userStatsError}>Error al recuperar las estadisticas</AlertError>
               <AlertError errorState={insertError}>Error al guardar la partida</AlertError>
               <AlertError errorState={deleteMatchError}>Error al borrar la partida</AlertError>
             </div>

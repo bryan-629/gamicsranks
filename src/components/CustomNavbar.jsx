@@ -51,7 +51,10 @@ const CustomNavbar = () => {
                     
                   </>
                   ):(
-                  <LoginButton clases={'btn btn-primary font-roboto'} >Sign in</LoginButton>)}
+                  <div className='d-flex align-items-center'>
+                    <LoginButton clases={'btn btn-primary py-1 font-roboto'} >Sign in</LoginButton>
+                  </div>
+                  )}
         </Nav>
       </Navbar.Collapse>
       </div>
