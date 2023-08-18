@@ -167,13 +167,12 @@ function getFechaArray(data) {
         <div className=''>
           <div className='mb-3 d-flex flex-row justify-content-between'>
             <div className='d-flex flex-row justify-content-center align-items-center'>
-              
-              <h3 className='text-uppercase '>{props.user}</h3>
+              <h2 className='text-uppercase '>{props.user}</h2>
             </div>
               {showButtonNewMatch() ? (<Button variant="primary btn"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
           </div>
           <div className='mb-3'>
-                <h5 className='text-uppercase'>User Stats</h5>
+                <h6 className='text-uppercase text-muted-dark'>User Stats</h6>
             </div>
           <div className='container-fluid'>
              <div className='d-flex justify-content-between row mb-4'>
@@ -182,7 +181,7 @@ function getFechaArray(data) {
                         <>
                         <div className='col-md-4 col-sm-12 p-0 pe-md-2'>
                           <div className='bg-card p-3 rounded'>
-                            <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Kills deaths ratio</p>
+                            <p className='text-muted-dark mb-0 mx-1 font-roboto text-uppercase'>Kills deaths ratio</p>
                               <h1 className={`px-1 font-bebas`}>{userStats.datosGenerales.kd_promedio}</h1>
                               <LineChart 
                                 killsTotalesArray={killsTotalesArray} 
@@ -197,7 +196,7 @@ function getFechaArray(data) {
 
                         <div className='col-md-4 p-0 col-sm-12 px-md-1 h-100'>
                           <div className='bg-card p-3 rounded h-100'>
-                            <p className='text-muted-dark mb-0 font-roboto text-uppercase'>SR</p>
+                            <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>SR</p>
                             <h1 className={`px-1 font-bebas ${userStats.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.datosGenerales.sr_ganados_perdidos):(userStats.datosGenerales.sr_ganados_perdidos)} </h1>
                             <LineChart 
                               killsTotalesArray={null} 
@@ -211,7 +210,7 @@ function getFechaArray(data) {
                         </div>
                         <div className='col-md-4 p-0 col-sm-12 ps-md-2'>
                           <div className='bg-card p-3 rounded'>
-                            <p className='text-muted-dark mb-0 font-roboto text-uppercase'>Wins%</p>
+                            <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>Wins%</p>
                             <h1 className=' px-1  font-bebas'>{userStats.datosGenerales.porcentaje_victorias + "%" }</h1>
                             <LineChart 
                               killsTotalesArray={null} 
@@ -232,7 +231,7 @@ function getFechaArray(data) {
           </div>
             
             <div className='mb-3'>
-                <h5 className='text-uppercase'>Last matches</h5>
+                <h6 className='text-uppercase text-muted-dark'>Last matches</h6>
             </div>
             
             <div className='d-flex justify-content-center w-100'>
