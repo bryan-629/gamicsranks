@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import AlertError from '../components/AlertError'
 import LineChart from '@/components/LineChart';
 import Image from 'next/image'
+import Spinner from 'react-bootstrap/Spinner';
+
 function user(props) { //Perfil del usuario donde se muestran  todas las estadisticas
     
     const route = useRouter()
@@ -39,6 +41,14 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     const [muertesTotalesArray, setMuertesTotales] = useState(false);
     const [porcentajeVictoriasArray, setPorcentajeVictoriasArray] = useState(false);
     const [killsTotalesArray, setKillsTotalesArray] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(()=>{
+      if (matches && user && userStats) {
+        setIsLoading(false)
+      }
+
+    },[matches,user,userStats])
   
 
     //Use Effect para cuando se renderiza por primera vez.
@@ -156,176 +166,188 @@ function getFechaArray(data) {
         getData()
     }
 
-  return (
-    <>
-    <CustomNavbar></CustomNavbar>
-    <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid px-5 py-4'>
-      <div className='container '>
-      
-      
-        
-        <div className=''>
-          <div className='mb-3 d-flex flex-row justify-content-between'>
-            <div className='d-flex flex-row justify-content-center align-items-center'>
-              <h2 className='text-uppercase '>{props.user}</h2>
-            </div>
-              {showButtonNewMatch() ? (<Button variant="primary btn"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
-          </div>
-          <div className='mb-3'>
-                <h6 className='text-uppercase text-muted-dark'>User Stats</h6>
-            </div>
-          <div className='container-fluid'>
-             <div className='d-flex justify-content-between row mb-4'>
-                    {userStats != null?
-                    (
-                        <>
-                        <div className='col-md-4 col-sm-12 p-0 pe-md-2'>
-                          <div className='bg-card p-3 rounded'>
-                            <p className='text-muted-dark mb-0 mx-1 font-roboto text-uppercase'>Kills deaths ratio</p>
-                              <h1 className={`px-1 font-bebas`}>{userStats.datosGenerales.kd_promedio}</h1>
-                              <LineChart 
-                                killsTotalesArray={killsTotalesArray} 
-                                muertesTotalesArray={muertesTotalesArray} 
-                                fechaArray={fechaArray} 
-                                srPorPartidaArray={null} 
-                                porcentajeVictoriasArray={null} 
-                                kdArray={kdArray}>
-                              </LineChart>
-                          </div>
-                        </div>
 
-                        <div className='col-md-4 p-0 col-sm-12 px-md-1 h-100'>
-                          <div className='bg-card p-3 rounded h-100'>
-                            <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>SR</p>
-                            <h1 className={`px-1 font-bebas ${userStats.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.datosGenerales.sr_ganados_perdidos):(userStats.datosGenerales.sr_ganados_perdidos)} </h1>
-                            <LineChart 
-                              killsTotalesArray={null} 
-                              muertesTotalesArray={null} 
-                              fechaArray={fechaArray}
-                              srPorPartidaArray={srPorPartidaArray} 
-                              porcentajeVictoriasArray={null} 
-                              kdArray={null}>
-                            </LineChart>
-                          </div>
-                        </div>
-                        <div className='col-md-4 p-0 col-sm-12 ps-md-2'>
-                          <div className='bg-card p-3 rounded'>
-                            <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>Wins%</p>
-                            <h1 className=' px-1  font-bebas'>{userStats.datosGenerales.porcentaje_victorias + "%" }</h1>
-                            <LineChart 
-                              killsTotalesArray={null} 
-                              muertesTotalesArray={null} 
-                              fechaArray={fechaArray} 
-                              porcentajeVictoriasArray={porcentajeVictoriasArray} 
-                              kdArray={null}>
-                            </LineChart>
-                          </div>
-                        </div>
-                        </>
-                    ):
-                    (
-                        null
-                    )
-                    }
-            </div>
-          </div>
+    if (!isLoading) {
+      return(
+        <>
+    
+        <CustomNavbar></CustomNavbar>
+        <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid px-5 py-4'>
+          <div className='container '>
+          
+          
             
-            <div className='mb-3'>
-                <h6 className='text-uppercase text-muted-dark'>Last matches</h6>
-            </div>
-            
-            <div className='d-flex justify-content-center w-100'>
-                <div className='w-100'>
-                    {isLoadingMatches || isLoadingAuth?
-                    (
-                    <h1>Loading...</h1>
-                    ):(
-                        matches?(
-                            <Table matches={matches} handleClickDelete={handleClickDelete} handleEdit={handleEdit}></Table>
-                            ):(
-                                <h1>Vacio...</h1>
-                            )
-                        )}
+            <div className=''>
+              <div className='mb-3 d-flex flex-row justify-content-between'>
+                <div className='d-flex flex-row justify-content-center align-items-center'>
+                  <h2 className='text-uppercase '>{props.user}</h2>
+                </div>
+                  {showButtonNewMatch() ? (<Button variant="primary btn"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
+              </div>
+              <div className='mb-3'>
+                    <h6 className='text-uppercase text-muted-dark'>User Stats</h6>
+                </div>
+              <div className='container-fluid'>
+                 <div className='d-flex justify-content-between row mb-4'>
+                        {userStats != null?
+                        (
+                            <>
+                            <div className='col-md-4 col-sm-12 p-0 pe-md-2'>
+                              <div className='bg-card p-3 rounded'>
+                                <p className='text-muted-dark mb-0 mx-1 font-roboto text-uppercase'>Kills deaths ratio</p>
+                                  <h1 className={`px-1 font-bebas`}>{userStats.datosGenerales.kd_promedio}</h1>
+                                  <LineChart 
+                                    killsTotalesArray={killsTotalesArray} 
+                                    muertesTotalesArray={muertesTotalesArray} 
+                                    fechaArray={fechaArray} 
+                                    srPorPartidaArray={null} 
+                                    porcentajeVictoriasArray={null} 
+                                    kdArray={kdArray}>
+                                  </LineChart>
+                              </div>
+                            </div>
+    
+                            <div className='col-md-4 p-0 col-sm-12 px-md-1 h-100'>
+                              <div className='bg-card p-3 rounded h-100'>
+                                <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>SR</p>
+                                <h1 className={`px-1 font-bebas ${userStats.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.datosGenerales.sr_ganados_perdidos):(userStats.datosGenerales.sr_ganados_perdidos)} </h1>
+                                <LineChart 
+                                  killsTotalesArray={null} 
+                                  muertesTotalesArray={null} 
+                                  fechaArray={fechaArray}
+                                  srPorPartidaArray={srPorPartidaArray} 
+                                  porcentajeVictoriasArray={null} 
+                                  kdArray={null}>
+                                </LineChart>
+                              </div>
+                            </div>
+                            <div className='col-md-4 p-0 col-sm-12 ps-md-2'>
+                              <div className='bg-card p-3 rounded'>
+                                <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>Wins%</p>
+                                <h1 className=' px-1  font-bebas'>{userStats.datosGenerales.porcentaje_victorias + "%" }</h1>
+                                <LineChart 
+                                  killsTotalesArray={null} 
+                                  muertesTotalesArray={null} 
+                                  fechaArray={fechaArray} 
+                                  porcentajeVictoriasArray={porcentajeVictoriasArray} 
+                                  kdArray={null}>
+                                </LineChart>
+                              </div>
+                            </div>
+                            </>
+                        ):
+                        (
+                            null
+                        )
+                        }
+                </div>
+              </div>
+                
+                <div className='mb-3'>
+                    <h6 className='text-uppercase text-muted-dark'>Last matches</h6>
+                </div>
+                
+                <div className='d-flex justify-content-center w-100'>
+                    <div className='w-100'>
+                        {isLoadingMatches || isLoadingAuth?
+                        (
+                        <h1>Loading...</h1>
+                        ):(
+                            matches?(
+                                <Table matches={matches} handleClickDelete={handleClickDelete} handleEdit={handleEdit}></Table>
+                                ):(
+                                    <h1>Vacio...</h1>
+                                )
+                            )}
+                    </div>
                 </div>
             </div>
+            <Modal show={show}  onHide={handleCloseModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>ADD NEW MATCH</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                <Form.Group className="mb-3" controlId="">
+                        <Form.Label>Result</Form.Label>
+                        <Form.Select name='result' value={form.result} onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}>
+                            <option value="Win">Win</option>
+                            <option value="Lose">Lose</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="">
+                        <Form.Label>Mode</Form.Label>
+                        <Form.Select name='mode' value={form.mode} onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}>
+                            <option value="Hard point">Hard point</option>
+                            <option value="Control">Control</option>
+                            <option value="SND">SND</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="">
+                        <Form.Label>Map</Form.Label>
+                        <Form.Select name='map' value={form.map} onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}>
+                            <option value="Al Bagra Fortress">Al Bagra Fortress</option>
+                            <option value="El Asilo">El Asilo</option>
+                            <option value="Expo">Expo</option>
+                            <option value="Hydro">Hydro</option>
+                            <option value="Breenbergh Hotel">Breenbergh Hotel</option>
+                            <option value="Embassy">Embassy</option>
+                            <option value="Mercado">Mercado</option>
+                        </Form.Select>
+                    </Form.Group>
+                
+                    <Form.Group className="mb-3" controlId="">
+                        <Form.Label>Points</Form.Label>
+                        <Form.Control name='points' value={form.points} type="number" placeholder="Enter points" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="">
+                        <Form.Label>Kills</Form.Label>
+                        <Form.Control name='kills' value={form.kills} type="number" placeholder="Enter kills" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="">
+                        <Form.Label>Deaths</Form.Label>
+                        <Form.Control name='deaths' value={form.deaths} type="number" placeholder="Enter deaths" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="">
+                        <Form.Label>Sr after match</Form.Label>
+                        <Form.Control name='srTotal' value={form.srTotal} type="number" placeholder="Enter sr after match" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseModal}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={() => {storeOrUpdateGameInDatabase() 
+                handleCloseModal()}}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          {matchesError || insertError || deleteMatchError?(
+            <div className='fixed-top mt-5 d-flex justify-content-center flex-column align-items-center'>
+              <AlertError errorState={matchesError}>Error al recuperar las estadisticas</AlertError>
+              <AlertError errorState={insertError}>Error al guardar la partida</AlertError>
+              <AlertError errorState={deleteMatchError}>Error al borrar la partida</AlertError>
+            </div>
+          ):(
+            null
+            )}
+         </div>
         </div>
-        <Modal show={show}  onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>ADD NEW MATCH</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <Form>
-            <Form.Group className="mb-3" controlId="">
-                    <Form.Label>Result</Form.Label>
-                    <Form.Select name='result' value={form.result} onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}>
-                        <option value="Win">Win</option>
-                        <option value="Lose">Lose</option>
-                    </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="">
-                    <Form.Label>Mode</Form.Label>
-                    <Form.Select name='mode' value={form.mode} onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}>
-                        <option value="Hard point">Hard point</option>
-                        <option value="Control">Control</option>
-                        <option value="SND">SND</option>
-                    </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="">
-                    <Form.Label>Map</Form.Label>
-                    <Form.Select name='map' value={form.map} onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}>
-                        <option value="Al Bagra Fortress">Al Bagra Fortress</option>
-                        <option value="El Asilo">El Asilo</option>
-                        <option value="Expo">Expo</option>
-                        <option value="Hydro">Hydro</option>
-                        <option value="Breenbergh Hotel">Breenbergh Hotel</option>
-                        <option value="Embassy">Embassy</option>
-                        <option value="Mercado">Mercado</option>
-                    </Form.Select>
-                </Form.Group>
-            
-                <Form.Group className="mb-3" controlId="">
-                    <Form.Label>Points</Form.Label>
-                    <Form.Control name='points' value={form.points} type="number" placeholder="Enter points" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="">
-                    <Form.Label>Kills</Form.Label>
-                    <Form.Control name='kills' value={form.kills} type="number" placeholder="Enter kills" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="">
-                    <Form.Label>Deaths</Form.Label>
-                    <Form.Control name='deaths' value={form.deaths} type="number" placeholder="Enter deaths" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="">
-                    <Form.Label>Sr after match</Form.Label>
-                    <Form.Control name='srTotal' value={form.srTotal} type="number" placeholder="Enter sr after match" onChange={(e)=>{setForm({...form,[e.target.name]:e.target.value})}}/>
-                </Form.Group>
-            </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => {storeOrUpdateGameInDatabase() 
-            handleCloseModal()}}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      {matchesError || insertError || deleteMatchError?(
-        <div className='fixed-top mt-5 d-flex justify-content-center flex-column align-items-center'>
-          <AlertError errorState={matchesError}>Error al recuperar las estadisticas</AlertError>
-          <AlertError errorState={insertError}>Error al guardar la partida</AlertError>
-          <AlertError errorState={deleteMatchError}>Error al borrar la partida</AlertError>
-        </div>
-      ):(
-        null
-        )}
-     </div>
-    </div>
-
-    </>
     
-  )
+        </>
+      )
+    }else{
+      //Esta cargando la pagina...
+      return(
+        <>
+          <div className='min-vh-100 bg-dark text-white d-flex justify-content-center align-items-center containter-fluid px-5 py-4'>
+            <Spinner animation="grow" variant="secondary" />
+          </div>
+        </>
+      )
+    }
 }
 
 export default user
