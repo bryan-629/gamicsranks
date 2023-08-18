@@ -10,9 +10,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const CustomNavbar = () => {
   const { user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId} = useAuthentication();
-  console.log(user)
-  
-    
+
     const userImg = (
       <Image
         src={user?.photo_url}
