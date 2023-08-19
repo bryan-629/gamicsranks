@@ -185,23 +185,23 @@ function getFechaArray(data) {
           
             
             <div className=''>
-              <div className='mb-3 d-flex flex-row justify-content-between'>
+              <div className='mb-2 d-flex flex-row justify-content-between'>
                 <div className='d-flex flex-row justify-content-center align-items-center'>
-                  <Image src={userStats.data.userInfo.photo_url}
+                  {userStats.data?.userInfo?(<Image src={userStats.data.userInfo.photo_url}
                     alt="UserName profile image"
-                    className=' align-content-center rounded-circle mb-2 flex-row'
+                    className=' align-content-center rounded-circle mb-3 flex-row'
                     width={60}
                     height={60}
                     roundedCircle = {true}>
-                    </Image>
-                  <h2 className='text-uppercase mx-3'>{props.user}</h2>
+                    </Image>):(null)}
+                  <h1 className='text-uppercase mx-3 font-bebas'>{props.user}</h1>
                 </div>
                 <div className='d-flex align-items-center'>
                   {showButtonNewMatch() ? (<Button variant="primary btn-sm"  onClick={handleOpenModal}>ADD NEW MATCH</Button>):(null)}
                 </div> 
               </div>
               <div className='mb-2'>
-                  <h6 className='text-uppercase text-muted-dark'> User Stats</h6>
+                  <h6 className='text-uppercase text-muted-dark font-bebas'> User Stats</h6>
               </div>
               <div className='container-fluid'>
                  <div className='d-flex justify-content-between row mb-4'>
@@ -210,7 +210,7 @@ function getFechaArray(data) {
                             <>
                             <div className='col-md-4 col-sm-12 p-0 pe-md-2'>
                               <div className='bg-card p-3 rounded'>
-                                <p className='text-muted-dark mb-0 mx-1 font-roboto text-uppercase'>Kills deaths ratio</p>
+                                <h5 className='text-muted-dark mb-0 mx-1 font-bebas text-uppercase'>Kills deaths ratio</h5>
                                   <h1 className={`px-1 font-bebas`}>{userStats.data.datosGenerales.kd_promedio}</h1>
                                   <LineChart 
                                     killsTotalesArray={killsTotalesArray} 
@@ -225,7 +225,7 @@ function getFechaArray(data) {
     
                             <div className='col-md-4 p-0 col-sm-12 px-md-1 h-100'>
                               <div className='bg-card p-3 rounded h-100'>
-                                <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>SR</p>
+                                <h5 className='text-muted-dark mb-0 font-bebas text-uppercase mx-1'>SR</h5>
                                 <h1 className={`px-1 font-bebas ${userStats.data.datosGenerales.sr_ganados_perdidos > 0? ("text-success"):("text-danger")}`}>{userStats.data.datosGenerales.sr_ganados_perdidos > 0 ? ("+"+userStats.data.datosGenerales.sr_ganados_perdidos):(userStats.data.datosGenerales.sr_ganados_perdidos)} </h1>
                                 <LineChart 
                                   killsTotalesArray={null} 
@@ -239,7 +239,7 @@ function getFechaArray(data) {
                             </div>
                             <div className='col-md-4 p-0 col-sm-12 ps-md-2'>
                               <div className='bg-card p-3 rounded'>
-                                <p className='text-muted-dark mb-0 font-roboto text-uppercase mx-1'>Wins%</p>
+                                <h5 className='text-muted-dark mb-0 font-bebas text-uppercase mx-1'>Wins%</h5>
                                 <h1 className=' px-1  font-bebas'>{userStats.data.datosGenerales.porcentaje_victorias + "%" }</h1>
                                 <LineChart 
                                   killsTotalesArray={null} 
@@ -260,7 +260,7 @@ function getFechaArray(data) {
               </div>
                 
                 <div className='mb-2'>
-                    <h6 className='text-uppercase text-muted-dark'>Last matches</h6>
+                    <h6 className='text-uppercase text-muted-dark font-bebas'>Last matches</h6>
                 </div>
                 
                 <div className='d-flex justify-content-center w-100'>
