@@ -42,7 +42,7 @@ const CustomNavbar = () => {
                           align={ {md: "end",sm:"start"} } 
                         >
                           
-                          <NavDropdown.Item className='nav-link font-roboto text-center text-white px-4' href={`/${user.id}`} >Profile</NavDropdown.Item>
+                          <NavDropdown.Item className='nav-link font-roboto text-center text-white px-4' href={`/mw/${user.id}`} >Profile</NavDropdown.Item>
                           
                           <NavDropdown.Item>
                             <LogOut clases={'btn text-white w-100  font-roboto text-center'}>Sign out</LogOut>

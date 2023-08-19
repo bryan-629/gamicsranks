@@ -1,19 +1,18 @@
 import { useState,useEffect,useContext } from 'react'
 import Table from '@/components/Table'
 import { Modal,Button, Form } from 'react-bootstrap'
-import '../firebase'
+import '../../firebase'
 import CustomNavbar from '@/components/CustomNavbar'
 import useApi from '@/hooks/useApi';
-import { useAuthentication } from '../../Context/AuthProvider';
+import { useAuthentication } from '../../../Context/AuthProvider';
 import useCookie from '@/hooks/useCookie';
 import { useRouter } from 'next/router';
-import AlertError from '../components/AlertError'
+import AlertError from '../../components/AlertError'
 import LineChart from '@/components/LineChart';
 import Image from 'next/image'
 import Spinner from 'react-bootstrap/Spinner';
-
+import GameSelectorBar from '@/components/GameSelectorBar'
 function user(props) { //Perfil del usuario donde se muestran  todas las estadisticas
-    
     const route = useRouter()
     const initialForm = {
         username:props.user.toUpperCase(),
@@ -43,7 +42,7 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(()=>{
-      if ( user && userStats) {
+      if ( !isLoadingAuth && userStats) {
         setIsLoading(false)
       }
 
@@ -179,6 +178,7 @@ function getFechaArray(data) {
         <>
     
         <CustomNavbar></CustomNavbar>
+        <GameSelectorBar mode={props.mode} user={props.user}/>
         <div className='min-vh-100 bg-dark text-white d-flex justify-content-center containter-fluid py-4'>
           <div className='container '>
           
@@ -369,6 +369,7 @@ export async function getServerSideProps({query}) {
     return {
       props: {
         user:query.user,
+        mode:query.mode
     }
   }
 }

@@ -107,6 +107,15 @@
 .text-muted-dark{
   color: #79747B;
 }
+.image-opacity {
+  opacity: 0.5; /* Cambia este valor para ajustar la opacidad (de 0 a 1) */
+  transition: opacity 0.3s ease; /* Agrega una transición suave para cambios de opacidad */
+}
+.pointer{
+  cursor: pointer;
+}
+
+
 
 @media (prefers-color-scheme: dark) {
   html {

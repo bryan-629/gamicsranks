@@ -5,7 +5,7 @@ import CustomNavbar from '@/components/CustomNavbar';
 import { Button, Fade } from 'react-bootstrap';
 import Image from 'next/image';
 import price from "../../public/price.png"
-import ModalFormulario from '@/components/ModalFormulario';
+import ModalFormulario from '@/components/ModalFormulariouUserID';
 import { useEffect } from 'react';
 import AlertError from '../components/AlertError'
 import { useAuthentication } from '../../Context/AuthProvider';
