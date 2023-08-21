@@ -15,7 +15,7 @@ function GameSelectorBar({mode,user}) {
                 <div className='d-flex align-items-center'>
                   <Image src={wzLogo} width={25} height={20} className={`${isWarzone()? (''):('image-opacity')} `} alt='logo'></Image>
                   <h6 className={` ${isWarzone()? ('text-white'):('text-white-50')} mb-0 font-bebas mx-2 mt-1 `}>Warzone</h6>
-                  <i class="bi bi-lock-fill text-white-50"></i>
+                  <i className="bi bi-lock-fill text-white-50"></i>
               </div>
             </Link>
             <Link className='link-offset-2 link-underline link-underline-opacity-0' href={`/mw/${user}`}>

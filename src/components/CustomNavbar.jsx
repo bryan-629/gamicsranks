@@ -18,7 +18,7 @@ const CustomNavbar = () => {
         className=' align-content-center rounded-circle  p-0 flex-row'
         width={30}
         height={30}
-        roundedCircle = {true}
+        
     />
     )
  
@@ -39,7 +39,7 @@ const CustomNavbar = () => {
                           title={userImg}
                           
                           menuVariant="dark"
-                          align={ {md: "end",sm:"start"} } 
+                          align={"end"} 
                         >
                           
                           <NavDropdown.Item className='nav-link font-roboto text-center text-white px-4' href={`/mw/${user.id}`} >Profile</NavDropdown.Item>
