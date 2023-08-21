@@ -55,16 +55,13 @@ function TableWz({matches,handleClickDelete,handleEdit}) {
         return (
             <table className="table table-dark table-striped">
                 <thead>
-                    <tr>
-                        <th scope="col">Resultado</th>
+                <tr>
+                        <th scope="col">Position</th>
                         <th scope="col">Fecha</th>
-                        <th scope="col">Mode</th>
-                        <th scope="col">Maps</th>
-                        <th scope="col">Points</th>
                         <th scope="col">Kills</th>
-                        <th scope="col">Deaths</th>
                         <th scope="col">SR</th>
                         <th scope="col">Total SR</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,13 +71,9 @@ function TableWz({matches,handleClickDelete,handleEdit}) {
                        
                         return(
                             <tr className='' key={match.id} id={match.id}>
-                                <th scope="row">{match.result}</th>
+                                <th scope="row">{match.position}</th>
                                 <td>{fecha.toLocaleDateString()}</td>
-                                <td>{match.mode}</td>
-                                <td>{match.map}</td>
-                                <td>{match.points}</td>
                                 <td>{match.kills}</td>
-                                <td>{match.deaths}</td>
                                 {match.sr > 0? (
                                     <td className='text-success'>{"+" + match.sr}</td>
                                 ):(<td className='text-danger'>{match.sr}</td>)}
@@ -100,13 +93,9 @@ function TableWz({matches,handleClickDelete,handleEdit}) {
         <table className="table table-dark table-striped">
             <thead>
                 <tr>
-                    <th scope="col">Resultado</th>
+                    <th scope="col">Position</th>
                     <th scope="col">Fecha</th>
-                    <th scope="col">Mode</th>
-                    <th scope="col">Maps</th>
-                    <th scope="col">Points</th>
                     <th scope="col">Kills</th>
-                    <th scope="col">Deaths</th>
                     <th scope="col">SR</th>
                     <th scope="col">Total SR</th>
                 </tr>
@@ -117,13 +106,9 @@ function TableWz({matches,handleClickDelete,handleEdit}) {
                     match.sr = calculatePreviousPointDifferences(match, index)
                     return(
                         <tr className='' key={match.id} id={match.id}>
-                            <th scope="row">{match.result}</th>
+                            <th scope="row">{match.position}</th>
                             <td>{fecha.toLocaleDateString()}</td>
-                            <td>{match.mode}</td>
-                            <td>{match.map}</td>
-                            <td>{match.points}</td>
                             <td>{match.kills}</td>
-                            <td>{match.deaths}</td>
                             {match.sr > 0? (
                                 <td className='text-success'>{"+" + match.sr}</td>
                             ):(<td className='text-danger'>{match.sr}</td>)}
