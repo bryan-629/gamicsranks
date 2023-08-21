@@ -1,5 +1,5 @@
 import { useState,useEffect,useContext } from 'react'
-import Table from '@/components/Table'
+import TableWz from '@/components/TableWZ'
 import { Modal,Button, Form } from 'react-bootstrap'
 import '../firebase'
 import CustomNavbar from '@/components/CustomNavbar'
@@ -12,19 +12,15 @@ import LineChart from '@/components/LineChart';
 import Image from 'next/image'
 import Spinner from 'react-bootstrap/Spinner';
 import GameSelectorBar from '@/components/GameSelectorBar'
-import AddMatchMPModal from '@/components/AddMatchMPModal'
+import AddMatchWZModal from '@/components/AddMatchWZModal'
 
 
-function MpPage({props}) { //Perfil del usuario donde se muestran  todas las estadisticas
+function WzPage({props}) { //Perfil del usuario donde se muestran  todas las estadisticas
     const route = useRouter()
     const initialForm = {
         username:props.user.toUpperCase(),
-        result:'Win',
-        mode:'Hard point',
-        map:'Al Bagra Fortress',
-        points:'',
+        position:'',
         kills:'',
-        deaths:'',
         srTotal:'',
         userID:''
     }
@@ -130,7 +126,7 @@ function getFechaArray(data) {
 
     const handleClickDelete = async (e) =>{
         e.preventDefault;
-        await deleteMatch(process.env.NEXT_PUBLIC_API_URL + "deleteMatch.php", "POST", {"matchID" : e.target.parentElement.parentElement.id});
+        await deleteMatch(process.env.NEXT_PUBLIC_API_URL + "deleteMatchWZ.php", "POST", {"matchID" : e.target.parentElement.parentElement.id});
         getData()
     }
     const handleEdit = async (e) =>{
@@ -147,7 +143,7 @@ function getFechaArray(data) {
   }
 
     const getData = async () => {
-        await getUserStats(process.env.NEXT_PUBLIC_API_URL + `userStats.php?user=${props.user.toUpperCase()}&mode=mw`, "GET")
+        await getUserStats(process.env.NEXT_PUBLIC_API_URL + `userStats.php?user=${props.user.toUpperCase()}&mode=wz`, "GET")
 
     }
 
@@ -166,10 +162,10 @@ function getFechaArray(data) {
     const storeOrUpdateGameInDatabase = async (e) =>{
 
       if (form.id) {
-        await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"updateMatch.php", "POST", form);
+        await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"updateMatchWZ.php", "POST", form);
         
       }else{
-        await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"insertMatch.php", "POST", form);
+        await insertDataRequest(process.env.NEXT_PUBLIC_API_URL +"insertMatchWZ.php", "POST", form);
       }
         getData()
     }
@@ -211,8 +207,8 @@ function getFechaArray(data) {
                             <>
                             <div className='col-md-4 col-sm-12 p-0 pe-md-2'>
                               <div className='bg-card p-3 rounded'>
-                                <h5 className='text-muted-dark mb-0 mx-1 font-bebas text-uppercase'>Kills deaths ratio</h5>
-                                  <h1 className={`px-1 font-bebas`}>{userStats.data.datosGenerales.kd_promedio}</h1>
+                                <h5 className='text-muted-dark mb-0 mx-1 font-bebas text-uppercase'>Kills per Game</h5>
+                                  <h1 className={`px-1 font-bebas`}>{userStats.data.datosGenerales.media_kills_por_partida}</h1>
                                   <LineChart 
                                     killsTotalesArray={killsTotalesArray} 
                                     muertesTotalesArray={muertesTotalesArray} 
@@ -267,14 +263,14 @@ function getFechaArray(data) {
                 <div className='d-flex justify-content-center w-100'>
                     <div className='w-100'>
                       {userStats.data?.matches? 
-                      (<Table matches={userStats.data.matches} handleClickDelete={handleClickDelete} handleEdit={handleEdit}></Table>)
+                      (<TableWz matches={userStats.data.matches} handleClickDelete={handleClickDelete} handleEdit={handleEdit}></TableWz>)
                       :
                       (null)}
                             
                     </div>
                 </div>
             </div>
-            <AddMatchMPModal
+            <AddMatchWZModal
             show={show}
             setShow={setShow}
             storeOrUpdateGameInDatabase={storeOrUpdateGameInDatabase}
@@ -309,5 +305,5 @@ function getFechaArray(data) {
     }
 }
 
-export default MpPage
+export default WzPage
 

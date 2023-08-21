@@ -14,6 +14,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import GameSelectorBar from '@/components/GameSelectorBar'
 import AddMatchMPModal from '@/components/AddMatchMPModal'
 import MpPage from '@/components/MultiPage'
+import WzPage from '@/components/WzPage'
 
 
 function user(props) { //Perfil del usuario donde se muestran  todas las estadisticas
@@ -24,7 +25,15 @@ function user(props) { //Perfil del usuario donde se muestran  todas las estadis
     <>
       <CustomNavbar></CustomNavbar>
       <GameSelectorBar mode={props.mode} user={props.user}/>
-      <MpPage props={props}></MpPage>
+      {
+        props.mode == 'wz' ?(
+        <WzPage props={props}></WzPage>
+        ):
+        (
+        <MpPage props={props}></MpPage>
+        )
+      }
+      
     </>
   )
 
