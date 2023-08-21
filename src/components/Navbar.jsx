@@ -5,6 +5,8 @@ import LoginButton from './LoginButton'
 import LogOut from './LogOut'
 import { useAuthentication } from '../../Context/AuthProvider'
 import Link from 'next/link'
+
+
 function Navbar() {
   const { user ,showNewIdModal, isLoadingAuth, signInWithGoogle, signOutUser, setShowNewIdModal,changeId} = useAuthentication();
 
