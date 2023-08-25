@@ -43,7 +43,7 @@ export default function Home() {
 
             </div>
             <div className='col-md-6 '>
-                <Image src={price} layout='responsive' objectFit="fill" className=' p-5'  alt={"price"}></Image>
+                <Image src={price} layout='responsive'   className=' p-5'  alt={"price"}></Image>
             </div>
         </div>
       </div>
