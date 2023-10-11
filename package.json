@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.0",
-    "bootstrap-icons": "^1.10.5",
+    "bootstrap-icons": "^1.11.1",
     "chart.js": "^4.3.0",
     "firebase": "^9.23.0",
     "firebaseui": "^6.0.2",
